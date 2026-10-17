@@ -334,7 +334,7 @@ function Air({ animasi }: { animasi: boolean }) {
 
   return (
     <mesh rotation={[-Math.PI / 2, 0, 0]} position={[8, -1.75, 8]} geometry={geo} raycast={() => null}>
-      <meshStandardMaterial color="#152430" roughness={0.28} metalness={0.5} />
+      <meshStandardMaterial color="#131F29" roughness={0.95} metalness={0} />
     </mesh>
   );
 }

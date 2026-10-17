@@ -58,6 +58,7 @@ export interface SpeakOptions {
   pitch?: number;
   volume?: number;
   onEnd?: () => void;
+  onError?: () => void;
 }
 
 export function stopSpeaking() {
@@ -86,7 +87,10 @@ export function speak(text: string, opts: SpeakOptions = {}): boolean {
   u.pitch = opts.pitch ?? 1.02;
   u.volume = opts.volume ?? 1;
   u.onend = () => opts.onEnd?.();
-  u.onerror = () => opts.onEnd?.();
+  u.onerror = () => {
+    opts.onError?.();
+    opts.onEnd?.();
+  };
 
   // jeda singkat agar pemanggilan cancel() sebelumnya benar-benar berakhir
   window.setTimeout(() => {

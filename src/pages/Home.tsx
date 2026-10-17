@@ -56,7 +56,7 @@ export default function Home() {
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.3, duration: 0.8 }}
             >
-              Ketintang · Lidah Wetan · Keputih · Magetan
+              Universitas Negeri Surabaya
             </motion.span>
           </div>
 
@@ -85,8 +85,8 @@ export default function Home() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.88, duration: 0.9 }}
             >
-              Kampus Universitas Negeri Surabaya dalam model tiga dimensi. Empat belas fakultas di empat lokasi, siap
-              dijelajahi penanda demi penanda.
+              Putar kampusnya, ketuk penanda yang menarik, dan biarkan TRACE bercerita — dari sejarah tiap fakultas
+              sampai jalan setapak yang menghubungkannya.
             </motion.p>
 
             <motion.div

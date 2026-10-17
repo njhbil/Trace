@@ -29,7 +29,16 @@ export default function FakultasPage() {
   const ucapkan = useCallback(() => {
     if (!fak || spoken.current) return;
     spoken.current = true;
-    const ok = speak(fak.suara, { rate: 0.94, pitch: 1.05, onEnd: () => setSpeaking(false) });
+    const ok = speak(fak.suara, {
+      rate: 0.94,
+      pitch: 1.05,
+      onEnd: () => setSpeaking(false),
+      onError: () => {
+        // browser memblokir — biarkan percobaan ulang pada gestur pertama
+        spoken.current = false;
+        setSpeaking(false);
+      },
+    });
     setSpeaking(ok);
     if (ok) playEntrance();
   }, [fak]);
@@ -39,7 +48,9 @@ export default function FakultasPage() {
     spoken.current = false;
     primeVoices();
 
-    const t = window.setTimeout(ucapkan, 600);
+    // percobaan langsung — biasanya langsung jalan bila pengunjung sudah
+    // pernah berinteraksi (mis. mengetuk penanda di peta)
+    const t = window.setTimeout(ucapkan, 500);
     const offGesture = onFirstGesture(() => {
       if (!spoken.current) ucapkan();
     });
@@ -114,6 +125,23 @@ export default function FakultasPage() {
               </p>
 
               <div className="fp-hero-actions">
+                <a
+                  className="maps-btn"
+                  href={`https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(fak.alamat)}`}
+                  target="_blank"
+                  rel="noreferrer noopener"
+                >
+                  <svg width="15" height="15" viewBox="0 0 16 16" aria-hidden="true" fill="none">
+                    <path
+                      d="M8 14.5s5-4.4 5-8a5 5 0 0 0-10 0c0 3.6 5 8 5 8Z"
+                      stroke="currentColor"
+                      strokeWidth="1.5"
+                      strokeLinejoin="round"
+                    />
+                    <circle cx="8" cy="6.4" r="1.8" stroke="currentColor" strokeWidth="1.5" />
+                  </svg>
+                  Rute Google Maps
+                </a>
                 <button className={`voice-btn ${speaking ? "speaking" : ""}`} onClick={ulangUcapan}>
                   <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true" fill="none">
                     <path

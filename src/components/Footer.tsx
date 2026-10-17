@@ -25,8 +25,8 @@ export default function Footer() {
               </span>
             </div>
             <p>
-              Panduan wisata edukatif {UNESA.singkatan}: {UNESA.jumlahFakultas} fakultas, satu rute, tersedia sebagai
-              situs web — tanpa aplikasi dan tanpa pendaftaran.
+              Panduan jelajah {UNESA.jumlahFakultas} fakultas {UNESA.singkatan} lewat peta tiga dimensi — langsung dari
+              peramban, tanpa aplikasi.
             </p>
           </div>
 
@@ -62,10 +62,7 @@ export default function Footer() {
           <span>
             © {new Date().getFullYear()} TRACE · {UNESA.nama}
           </span>
-          <span className="footer-note">
-            Foto dari kanal resmi UNESA &amp; dokumentasi tiap fakultas (hak cipta pemilik asli). Peta dan ilustrasi 3D
-            dibuat untuk TRACE, bersifat ilustratif.
-          </span>
+          <span className="footer-note">Peta dan ilustrasi 3D dibuat untuk TRACE, bersifat ilustratif.</span>
         </div>
       </div>
     </footer>

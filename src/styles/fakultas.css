@@ -109,6 +109,26 @@
   margin-top: 26px;
 }
 
+/* tombol navigasi eksternal ke Google Maps */
+.maps-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 12px 22px;
+  border-radius: 12px;
+  border: 1px solid var(--line-soft);
+  background: transparent;
+  color: var(--cream);
+  font-size: 0.88rem;
+  font-weight: 600;
+  transition: background 0.4s var(--ease-out), border-color 0.4s;
+}
+
+.maps-btn:hover {
+  background: rgba(247, 240, 226, 0.08);
+  border-color: var(--line);
+}
+
 /* ============================= FAKTA ============================= */
 
 /* empat sel fakta disajikan sebagai kolom bergaris di atas, bukan kotak seragam */
