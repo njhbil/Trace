@@ -56,7 +56,7 @@ export default function Home() {
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.3, duration: 0.8 }}
             >
-              {UNESA.nama} · Est. {UNESA.berdiri}
+              Ketintang · Lidah Wetan · Keputih · Magetan
             </motion.span>
           </div>
 
@@ -85,8 +85,8 @@ export default function Home() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.88, duration: 0.9 }}
             >
-              Panduan wisata edukatif {UNESA.singkatan}: 14 titik, 1 rute, 1 pengalaman. Jelajahi sejarah, budaya,
-              fasilitas, komunitas, dan kehidupan mahasiswa lewat peta kampus tiga dimensi.
+              Kampus Universitas Negeri Surabaya dalam model tiga dimensi. Empat belas fakultas di empat lokasi, siap
+              dijelajahi penanda demi penanda.
             </motion.p>
 
             <motion.div
@@ -99,13 +99,16 @@ export default function Home() {
                 className="btn btn-primary"
                 onClick={() => {
                   tick(760);
-                  document.getElementById("kenali")?.scrollIntoView({ behavior: "smooth", block: "start" });
+                  navigate("/peta");
                 }}
               >
-                Mulai Menjelajah
+                Buka Peta 3D
               </button>
-              <button className="btn btn-ghost" onClick={() => masuk("fisipol")}>
-                Masuk Titik Pertama →
+              <button
+                className="btn btn-ghost"
+                onClick={() => document.getElementById("kenali")?.scrollIntoView({ behavior: "smooth", block: "start" })}
+              >
+                Telusuri Panduan
               </button>
             </motion.div>
           </div>
