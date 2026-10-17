@@ -19,7 +19,7 @@ function ScrollManager() {
   return null;
 }
 
-/** Judul tab selalu ikut rute, supaya enak dibuka langsung dari tautan. */
+/** Judul tab mengikuti rute aktif agar nyaman dibuka langsung dari tautan. */
 function TitleManager() {
   const { pathname } = useLocation();
   useEffect(() => {

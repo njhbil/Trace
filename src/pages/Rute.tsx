@@ -6,11 +6,10 @@ import MiniMap from "../components/MiniMap";
 import { FAKULTAS } from "../data/fakultas";
 import { UNESA } from "../data/unesa";
 import { tick } from "../lib/gamelan";
+import { tahunPertama } from "../lib/teks";
 import "../styles/rute.css";
 
 const KEY = "trace-rute-selesai";
-
-const DUMMY_ALASAN = "";
 
 export default function Rute() {
   const navigate = useNavigate();
@@ -92,13 +91,27 @@ export default function Rute() {
 
             <div className="rute-eta">
               {done.length === route.length
-                ? "🎉 Rute lengkap! Semua titik sudah dikunjungi."
+                ? "Rute lengkap — semua titik sudah dikunjungi."
                 : `Sisa waktu kunjungan ± ${sisaMenit} menit`}
             </div>
 
             <div className="rute-actions">
               <button className="btn btn-primary btn-sm" onClick={() => window.print()}>
-                🖨 Cetak ceklis
+                <svg width="15" height="15" viewBox="0 0 16 16" aria-hidden="true" fill="none">
+                  <path
+                    d="M4.5 6V2.5h7V6M4.5 11.5h7v2h-7v-2Z"
+                    stroke="currentColor"
+                    strokeWidth="1.4"
+                    strokeLinejoin="round"
+                  />
+                  <path
+                    d="M4.5 11.5h-2v-5a1.5 1.5 0 0 1 1.5-1.5M11.5 11.5h2v-5a1.5 1.5 0 0 0-1.5-1.5"
+                    stroke="currentColor"
+                    strokeWidth="1.4"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+                Cetak ceklis
               </button>
               <button className="btn btn-ghost btn-sm" onClick={reset}>
                 Reset
@@ -138,7 +151,9 @@ export default function Rute() {
                   sekitar 2,5–3 jam.
                 </li>
               </ol>
-              <p className="rute-note">{DUMMY_ALASAN}</p>
+              <p className="rute-note">
+                Angka pada denah mengikuti urutan rute, bukan skala jarak sebenarnya.
+              </p>
               <button className="btn btn-ghost btn-sm" onClick={() => navigate("/peta")}>
                 Buka di peta 3D →
               </button>
@@ -180,17 +195,26 @@ export default function Rute() {
                     </div>
 
                     <div className="stop-meta">
-                      <span>📍 {f.kampus}</span>
-                      <span>🎓 {f.prodiTotal} prodi</span>
-                      <span>🏛 {f.berdiri.split(" ")[0]}</span>
+                      <span>{f.kampus}</span>
+                      <span>{f.prodiTotal} program studi</span>
+                      <span>Berdiri {tahunPertama(f.berdiri)}</span>
                     </div>
 
                     <p>{f.dayaTarik}</p>
 
                     <div className="stop-foot">
-                      <span className="stop-eta">± {menitPerTitik} menit</span>
+                      <span className="stop-eta">Kunjungan ± {menitPerTitik} menit</span>
                       <button className="stop-link" style={{ color: f.warna }} onClick={() => masuk(f.slug)}>
-                        Buka guide →
+                        Lihat panduan
+                        <svg width="13" height="13" viewBox="0 0 16 16" aria-hidden="true" fill="none">
+                          <path
+                            d="M4 8h8M8.5 4.5 12 8l-3.5 3.5"
+                            stroke="currentColor"
+                            strokeWidth="1.6"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          />
+                        </svg>
                       </button>
                     </div>
                   </div>

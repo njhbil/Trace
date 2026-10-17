@@ -1,8 +1,8 @@
 /**
  * DATABASE GUIDE — 14 titik wisata edukatif UNESA.
- * Semua isi di sini bisa kamu edit manual tanpa menyentuh komponen.
+ * Seluruh isi dapat diedit manual tanpa mengubah komponen mana pun.
  *
- * Foto: taruh file di `public/assets/fakultas/` lalu tulis namanya di field `foto`.
+ * Foto: letakkan berkas di `public/assets/fakultas/` lalu tulis namanya pada field `foto`.
  * Posisi `peta` adalah koordinat di peta 3D (meter, pusat pulau = 0,0) — ilustratif, bukan denah teknis.
  */
 

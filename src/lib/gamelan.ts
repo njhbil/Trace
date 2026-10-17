@@ -1,7 +1,7 @@
 /**
- * Gamelan mini — dibangkitkan langsung dengan WebAudio (tanpa file mp3).
- * Nada slendro perkiraan, pasangan oscillator sedikit "ombak" (detune)
- * biar terdengar seperti bonang kembar di gamelan.
+ * Gamelan mini — dibangkitkan langsung dengan WebAudio (tanpa berkas audio).
+ * Nada slendro disusun perkiraan; setiap pasangan oscillator sedikit bergeser
+ * (detune) agar terdengar seperti bonang kembar pada gamelan asli.
  */
 
 type Ctx = AudioContext & { _gamelan?: boolean };
@@ -14,13 +14,13 @@ let running = false;
 let nextTime = 0;
 
 const BPM = 68;
-const STEP_DUR = 60 / BPM / 2; // 8-an
+const STEP_DUR = 60 / BPM / 2; // seperdelapan ketukan
 
 // slendro (perkiraan, 5 nada dalam satu oktaf)
 const SCALE = [261.63, 293.66, 329.63, 392.0, 440.0];
 const OMBAK = 6; // cent detune pasangan
 
-// pola bonang (indeks nada) — jalan pelan, tidak repetitif membosankan
+// pola bonang (indeks nada) — berjalan lambat tanpa pola repetitif yang membosankan
 const PATTERN = [
   0, 2, 1, 3, 2, 4, 3, 1, 0, 3, 4, 2, 1, 0, 2, 4,
   3, 4, 1, 2, 0, 1, 3, 2, 4, 3, 2, 0, 1, 4, 2, 3,
@@ -107,7 +107,7 @@ function scheduler() {
     const i = step % PATTERN.length;
     const n = PATTERN[i];
 
-    // bonang: tiap 8-an, kadang disela
+    // bonang: dipukul pada langkah genap, kadang diselang langkah ganjil
     if (step % 2 === 0 || Math.random() > 0.55) {
       strike(ctx, SCALE[n], nextTime, 0.075, 1.5);
     }

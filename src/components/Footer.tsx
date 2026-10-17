@@ -3,6 +3,14 @@ import { FAKULTAS } from "../data/fakultas";
 import { UNESA } from "../data/unesa";
 import Logo from "./Logo";
 
+/** Kolom footer dikelompokkan per kampus, bukan per rentang nomor. */
+const GRUP_KAMPUS = [
+  { kode: "ketintang", label: "Kampus 1 Ketintang" },
+  { kode: "lidah", label: "Kampus 2 Lidah Wetan" },
+  { kode: "kampus3", label: "Kampus 3 Moestopo" },
+  { kode: "magetan", label: "PSDKU Magetan" },
+];
+
 export default function Footer() {
   return (
     <footer className="footer">
@@ -31,27 +39,23 @@ export default function Footer() {
             </div>
           </div>
 
-          <div>
-            <h5>Kampus 1 &amp; 2</h5>
-            <div className="footer-list">
-              {FAKULTAS.filter((f) => f.no <= 8).map((f) => (
-                <Link key={f.slug} to={`/fakultas/${f.slug}`}>
-                  {f.no}. {f.akronim}
-                </Link>
-              ))}
-            </div>
-          </div>
+          {GRUP_KAMPUS.map((grup) => {
+            const anggota = FAKULTAS.filter((f) => f.kampusKode === grup.kode).sort((a, b) => a.no - b.no);
+            if (!anggota.length) return null;
 
-          <div>
-            <h5>Titik Lainnya</h5>
-            <div className="footer-list">
-              {FAKULTAS.filter((f) => f.no > 8).map((f) => (
-                <Link key={f.slug} to={`/fakultas/${f.slug}`}>
-                  {f.no}. {f.akronim}
-                </Link>
-              ))}
-            </div>
-          </div>
+            return (
+              <div key={grup.kode}>
+                <h5>{grup.label}</h5>
+                <div className="footer-list">
+                  {anggota.map((f) => (
+                    <Link key={f.slug} to={`/fakultas/${f.slug}`}>
+                      {String(f.no).padStart(2, "0")}. {f.akronim}
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            );
+          })}
         </div>
 
         <div className="footer-bottom">

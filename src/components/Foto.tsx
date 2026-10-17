@@ -3,7 +3,7 @@ import { useState } from "react";
 interface Props {
   src: string;
   alt: string;
-  /** kode fakultas buat fallback */
+  /** kode fakultas untuk pratinjau */
   kode: string;
   className?: string;
   /** posisi objek foto */
@@ -11,8 +11,8 @@ interface Props {
 }
 
 /**
- * <img> dengan jaring pengaman: kalau file belum ada / gagal dimuat,
- * tampil placeholder gradasi + aksara (tetap estetik, bukan ikon rusak).
+ * Elemen <img> dengan pengaman: bila berkas belum tersedia atau gagal dimuat,
+ * diganti placeholder gradasi + aksara sehingga tampilan tetap rapi.
  */
 export default function Foto({ src, alt, kode, className = "", pos = "center" }: Props) {
   const [failed, setFailed] = useState(false);

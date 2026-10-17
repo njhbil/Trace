@@ -6,8 +6,8 @@ import { onFirstGesture } from "../lib/gesture";
 const PREF = "trace-gamelan";
 
 /**
- * Dock bawah kanan: kontrol suasana (gamelan) + suara pemandu (TTS).
- * Gamelan menyala otomatis pada sentuhan pertama (kecuali dimatikan pengunjung).
+ * Panel bawah kanan: kontrol suasana (gamelan) + suara pemandu (TTS).
+ * Gamelan menyala otomatis pada interaksi pertama (kecuali dimatikan pengunjung).
  */
 export default function AudioDock() {
   const [gamelan, setGamelan] = useState(false);
@@ -22,7 +22,7 @@ export default function AudioDock() {
     try {
       preferedOn = localStorage.getItem(PREF) !== "off";
     } catch {
-      /* mode privat: anggap mau menyala */
+      /* mode privat: asumsikan pengguna mengizinkan suara */
     }
 
     // browser memblokir audio sampai ada interaksi — tunggu gestur pertama
@@ -50,7 +50,7 @@ export default function AudioDock() {
       try {
         localStorage.setItem(PREF, "off");
       } catch {
-        /* noop */
+        /* abaikan */
       }
     } else {
       const ok = await startGamelan();
@@ -58,7 +58,7 @@ export default function AudioDock() {
       try {
         localStorage.setItem(PREF, "on");
       } catch {
-        /* noop */
+        /* abaikan */
       }
     }
   };
@@ -73,7 +73,7 @@ export default function AudioDock() {
 
   return (
     <div className="audio-dock" role="group" aria-label="Kontrol suasana">
-      <div className={`dock-hint ${hint ? "show" : ""}`}>Gamelan &amp; sapaan pemandu menyala otomatis ✨</div>
+      <div className={`dock-hint ${hint ? "show" : ""}`}>Suara gamelan dan sapaan pemandu menyala otomatis</div>
 
       <button
         className={`icon-btn ${gamelan ? "on" : ""}`}
@@ -82,7 +82,25 @@ export default function AudioDock() {
         aria-label={gamelan ? "Matikan gamelan" : "Nyalakan gamelan"}
         title={gamelan ? "Matikan gamelan" : "Nyalakan gamelan"}
       >
-        <span aria-hidden>{gamelan ? "♪" : "♫"}</span>
+        <span aria-hidden>
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <ellipse
+              cx="5.4"
+              cy="11.6"
+              rx="2.1"
+              ry="1.7"
+              stroke="currentColor"
+              strokeWidth="1.4"
+            />
+            <path
+              d="M7.5 11.6V3.9l5 1.4"
+              stroke="currentColor"
+              strokeWidth="1.4"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+        </span>
       </button>
 
       {isSpeechSupported() && (
@@ -93,7 +111,31 @@ export default function AudioDock() {
           aria-label={voice ? "Matikan suara pemandu" : "Nyalakan suara pemandu"}
           title={voice ? "Suara pemandu aktif" : "Suara pemandu mati"}
         >
-          <span aria-hidden>{voice ? "🔊" : "🔇"}</span>
+          <span aria-hidden>
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path
+                d="M7.5 3.3 4.4 6H2.4v4h2l3.1 2.7V3.3Z"
+                stroke="currentColor"
+                strokeWidth="1.4"
+                strokeLinejoin="round"
+              />
+              {voice ? (
+                <path
+                  d="M9.9 5.6a3.2 3.2 0 0 1 0 4.8M11.7 4a5.6 5.6 0 0 1 0 8"
+                  stroke="currentColor"
+                  strokeWidth="1.4"
+                  strokeLinecap="round"
+                />
+              ) : (
+                <path
+                  d="m10 6.2 3.4 3.6M13.4 6.2 10 9.8"
+                  stroke="currentColor"
+                  strokeWidth="1.4"
+                  strokeLinecap="round"
+                />
+              )}
+            </svg>
+          </span>
         </button>
       )}
     </div>

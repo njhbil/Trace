@@ -71,7 +71,7 @@ export function stopSpeaking() {
 
 /**
  * Ucapkan teks dengan aksen Indonesia.
- * Return false kalau perangkat tidak mendukung / fitur dimatikan.
+ * Mengembalikan false bila perangkat tidak mendukung atau fitur dinonaktifkan.
  */
 export function speak(text: string, opts: SpeakOptions = {}): boolean {
   if (!enabled || !isSpeechSupported() || !text.trim()) return false;
@@ -88,7 +88,7 @@ export function speak(text: string, opts: SpeakOptions = {}): boolean {
   u.onend = () => opts.onEnd?.();
   u.onerror = () => opts.onEnd?.();
 
-  // jeda kecil biar cancel() sebelumnya benar-benar bersih
+  // jeda singkat agar pemanggilan cancel() sebelumnya benar-benar berakhir
   window.setTimeout(() => {
     try {
       window.speechSynthesis.speak(u);

@@ -219,11 +219,15 @@
   right: 12px;
   width: 32px;
   height: 32px;
+  display: grid;
+  place-items: center;
   border-radius: 50%;
   border: 1px solid var(--line);
   background: rgba(25, 20, 16, 0.85);
   color: var(--cream-70);
+  cursor: pointer;
   z-index: 2;
+  transition: border-color 0.3s var(--ease-out), color 0.3s var(--ease-out);
 }
 
 .peta-card-close:hover {

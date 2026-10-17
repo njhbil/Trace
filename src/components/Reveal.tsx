@@ -10,7 +10,7 @@ interface RevealProps {
   as?: "div" | "section" | "li" | "article" | "span";
 }
 
-/** Animasi muncul saat masuk viewport — halus, tidak norak. */
+/** Animasi muncul saat masuk viewport — halus dan tidak berlebihan. */
 export default function Reveal({ children, delay = 0, y = 30, className = "", as = "div" }: RevealProps) {
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref as RefObject<Element>, { once: true, margin: "-12% 0px -8% 0px" });

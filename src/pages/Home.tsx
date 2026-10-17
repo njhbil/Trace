@@ -290,7 +290,7 @@ export default function Home() {
                       <span>{f.prodiTotal} prodi</span>
                     </div>
                     <span className="titik-join" style={{ color: f.warna }}>
-                      Buka guide →
+                      Lihat panduan
                     </span>
                   </div>
                 </a>

@@ -13,7 +13,7 @@ const EVENTS: (keyof WindowEventMap)[] = ["pointerdown", "keydown", "touchstart"
 
 /**
  * Jalankan `cb` pada interaksi pertama.
- * Return fungsi untuk membatalkan listener.
+ * Mengembalikan fungsi untuk membatalkan listener.
  */
 export function onFirstGesture(cb: Handler): () => void {
   if (typeof window === "undefined") return () => undefined;

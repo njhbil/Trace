@@ -12,7 +12,7 @@ Isinya:
 3. **Rute tur 1 titik → 14 titik** — satu jalur berurutan dengan ceklis kunjungan
    (tersimpan otomatis di perangkat) dan bisa dicetak.
 4. **14 halaman mini-guide fakultas** — sejarah, tahun berdiri, jumlah & daftar prodi,
-   dekan/wakil dekan, gedung/fasilitas, daya tarik, denah, serta **QR code** siap cetak.
+   dekan/wakil dekan, gedung/fasilitas, daya tarik, denah mini, serta sumber referensi.
 
 ---
 
@@ -27,13 +27,13 @@ npm run preview  # pratinjau hasil build
 
 `vite.config.ts` memakai `base: "./"`, sehingga isi folder `dist/` bisa langsung
 dibuka lewat `file://` atau di-drop ke hosting apa pun (GitHub Pages, Netlify,
-USB, CD, folder bersama) tanpa mengubah apa pun.
+USB, folder bersama) tanpa mengubah apa pun.
 
-### Rute & QR
+### Rute halaman
 
-Router memakai **hash** (`#/peta`, `#/rute`, `#/fakultas/ft`), jadi setiap halaman
-punya tautan stabil yang bisa dicetak QR-nya. QR dibuat langsung di browser
-(paket `qrcode`), tanpa panggilan API.
+Router memakai **hash** (`#/`, `#/peta`, `#/rute`, `#/fakultas/ft`), jadi setiap
+halaman punya tautan stabil yang aman dibagikan atau dipindai — tidak perlu
+konfigurasi *rewrite* apa pun di hosting.
 
 ---
 
@@ -41,15 +41,17 @@ punya tautan stabil yang bisa dicetak QR-nya. QR dibuat langsung di browser
 
 ```
 public/assets/fakultas/   foto gedung 14 fakultas (ganti bebas, nama file di data)
+public/favicon.svg        ikon tab TRACE
 src/data/fakultas.ts      ⭐ DATABASE — semua isi 14 halaman fakultas ada di sini
 src/data/unesa.ts         narasi umum UNESA, angka, timeline, 5 kampus
 src/lib/speech.ts         sapaan suara "Selamat datang di Fakultas …" (Web Speech API)
 src/lib/gamelan.ts        iringan gamelan & efek klik (WebAudio, disintesis, nol aset)
-src/lib/qr.ts             pembuat QR untuk tiap halaman fakultas
+src/lib/gesture.ts        penunda eksekusi sampai interaksi pertama pengunjung
+src/lib/teks.ts           utilitas teks bersama (tahun, nama singkat, domain sumber)
 src/three/                peta 3D (react-three-fiber): pulau, gedung joglo, penanda, rute
-src/components/           navigasi, footer, mini denah SVG, animasi reveal, foto fallback
+src/components/           navigasi, footer, logo, mini denah SVG, animasi reveal, foto fallback
 src/pages/                Home, Peta, Rute, FakultasPage, NotFound
-src/styles/               sistem desain (tema batik-gelap + emas)
+src/styles/               sistem desain (tema batik gelap + emas)
 research/                 catatan riset awal: sumber resmi, data per fakultas, kredit foto
 ```
 
@@ -69,6 +71,23 @@ placeholder aksara Jawa — tidak akan ada gambar rusak.
 
 Tambah objek baru di array `FAKULTAS` dan atur koordinat `peta` (ilustratif, satuan
 "unit peta", pusat pulau = 0,0). Angka `no` menentukan urutan rute.
+
+---
+
+## Deploy ke Vercel
+
+1. Push repositori ini ke GitHub.
+2. Di Vercel: **Add New → Project → Import** repositori tersebut.
+3. Vercel otomatis mendeteksi Vite. Bila diminta, isi:
+   - Framework Preset: **Vite**
+   - Build Command: `npm run build`
+   - Output Directory: `dist`
+4. Klik **Deploy**. Karena router memakai hash, tidak ada konfigurasi
+   *rewrites*/*redirects* yang perlu ditambahkan — `vercel.json` di repo ini
+   hanya memuat header dasar.
+
+Alternatif statis: jalankan `npm run build`, lalu unggah isi folder `dist/`
+ke hosting apa pun.
 
 ---
 
@@ -103,6 +122,6 @@ bagian bawah tiap halaman fakultas.
 ## Teknologi
 
 React 19 · TypeScript · Vite · react-three-fiber + drei (Three.js) · framer-motion ·
-react-router-dom · qrcode · Google Fonts (Cinzel, Plus Jakarta Sans, Noto Serif Jawa)
+react-router-dom · Google Fonts (Fraunces, Plus Jakarta Sans, Noto Serif Javanese)
 
 Dibuat untuk keperluan edukatif non-komersial.

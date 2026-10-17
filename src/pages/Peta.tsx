@@ -129,7 +129,14 @@ export default function Peta() {
             transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
           >
             <button className="peta-card-close" onClick={() => setActive(null)} aria-label="Tutup kartu">
-              ✕
+              <svg width="14" height="14" viewBox="0 0 16 16" aria-hidden="true" fill="none">
+                <path
+                  d="m4 4 8 8M12 4l-8 8"
+                  stroke="currentColor"
+                  strokeWidth="1.7"
+                  strokeLinecap="round"
+                />
+              </svg>
             </button>
 
             <div className="peta-card-top">
@@ -159,7 +166,7 @@ export default function Peta() {
 
             <div className="peta-card-cta">
               <button className="btn btn-primary btn-sm" onClick={() => masuk(fak.slug)}>
-                Masuk Guide →
+                Buka panduan
               </button>
               <button className="btn btn-ghost btn-sm" onClick={() => setActive(null)}>
                 Lihat peta

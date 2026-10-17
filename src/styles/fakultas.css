@@ -1,73 +1,23 @@
 /* ============================= HERO ============================= */
 
 .fp-hero {
-  position: relative;
-  min-height: clamp(360px, 56vh, 520px);
-  display: flex;
-  align-items: flex-end;
-  overflow: hidden;
-  background: var(--ink-800);
-}
-
-.fp-hero-foto {
-  position: absolute;
-  inset: 0;
-}
-
-.fp-hero-foto img {
-  transform: scale(1.03);
-  animation: heroZoom 16s ease-out both;
-}
-
-@keyframes heroZoom {
-  from {
-    transform: scale(1.1);
-  }
-  to {
-    transform: scale(1.01);
-  }
-}
-
-.fp-hero-mask {
-  position: absolute;
-  inset: 0;
-  background:
-    linear-gradient(180deg, rgba(25, 20, 16, 0.72) 0%, rgba(25, 20, 16, 0.3) 40%, rgba(25, 20, 16, 0.94) 100%),
-    linear-gradient(90deg, rgba(25, 20, 16, 0.82) 0%, transparent 70%);
-}
-
-.fp-hero-mask::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: 3px;
-  background: linear-gradient(90deg, var(--c), transparent 85%);
-}
-
-.fp-hero-inner {
-  position: relative;
-  z-index: 2;
-  padding-top: 108px;
-  padding-bottom: clamp(26px, 5vh, 46px);
-  width: min(100% - 40px, var(--wrap));
+  padding: clamp(100px, 13vh, 140px) 0 clamp(10px, 2vh, 22px);
 }
 
 .fp-back {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  margin-bottom: clamp(28px, 6vh, 60px);
-  padding: 9px 18px;
+  margin-bottom: clamp(20px, 3vh, 34px);
+  padding: 9px 16px;
   border-radius: 999px;
   border: 1px solid var(--line);
-  background: rgba(25, 20, 16, 0.6);
-  backdrop-filter: blur(8px);
+  background: var(--ink-800);
   color: var(--cream-70);
   font-size: 0.86rem;
   font-weight: 600;
-  transition: all 0.35s var(--ease-out);
+  cursor: pointer;
+  transition: border-color 0.35s var(--ease-out), color 0.35s var(--ease-out), transform 0.35s var(--ease-out);
 }
 
 .fp-back:hover {
@@ -76,29 +26,79 @@
   transform: translateX(-4px);
 }
 
+/* dua kolom: foto berbingkai di kiri, identitas fakultas di kanan */
+.fp-hero-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.02fr) minmax(0, 1fr);
+  gap: clamp(26px, 4vw, 60px);
+  align-items: center;
+}
+
+.fp-hero-media {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  border: 1px solid var(--line-soft);
+  background: var(--ink-800);
+  box-shadow: 0 34px 70px -46px rgba(0, 0, 0, 0.95);
+}
+
+.fp-hero-media .photo {
+  position: absolute;
+  inset: 0;
+}
+
+/* gradasi bawaan .photo dibuat lebih ringan karena tidak ada teks di atas foto */
+.fp-hero-media .photo::after {
+  background: linear-gradient(180deg, rgba(25, 20, 16, 0) 55%, rgba(25, 20, 16, 0.5));
+}
+
+.fp-hero-foto img {
+  animation: fpZoom 18s ease-out both;
+}
+
+@keyframes fpZoom {
+  from {
+    transform: scale(1.08);
+  }
+  to {
+    transform: scale(1.01);
+  }
+}
+
+.fp-hero-info {
+  min-width: 0;
+}
+
 .fp-hero-tags {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   flex-wrap: wrap;
-  margin-bottom: 16px;
+  margin-bottom: 18px;
 }
 
 .fp-title {
-  font-size: clamp(1.65rem, 4vw, 3rem);
-  line-height: 1.1;
+  margin: 0;
+  font-size: clamp(1.7rem, 3.4vw, 2.9rem);
+  line-height: 1.12;
   letter-spacing: -0.022em;
-  max-width: 22ch;
-  text-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+  max-width: 20ch;
 }
 
 .fp-akronim {
-  margin: 10px 0 0;
+  margin: 12px 0 0;
   font-family: var(--font-display);
-  font-size: clamp(0.95rem, 1.6vw, 1.15rem);
+  font-size: clamp(0.95rem, 1.5vw, 1.12rem);
   font-weight: 600;
-  letter-spacing: 0.16em;
+  letter-spacing: 0.14em;
   color: var(--c);
+}
+
+.fp-akronim i {
+  font-style: normal;
+  opacity: 0.55;
 }
 
 .fp-hero-actions {
@@ -106,7 +106,7 @@
   align-items: center;
   gap: 14px;
   flex-wrap: wrap;
-  margin-top: 22px;
+  margin-top: 26px;
 }
 
 /* ============================= FAKTA ============================= */
@@ -451,7 +451,7 @@
   justify-content: flex-end;
 }
 
-/* kotak menyesuaikan teks — tidak melebar penuh lalu tulisan mengambang di pojok */
+/* lebar kotak mengikuti isi teks agar label tidak mengambang di pojok */
 .fp-nav-item {
   display: inline-flex;
   flex-direction: column;
@@ -522,15 +522,26 @@
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     align-items: start;
   }
+
+  /* foto dan teks berdempetan vertikal agar muat di layar sedang */
+  .fp-hero-grid {
+    grid-template-columns: 1fr;
+    gap: clamp(22px, 4vw, 30px);
+  }
+
+  .fp-hero-media {
+    aspect-ratio: 16 / 10;
+  }
 }
 
 @media (max-width: 720px) {
   .fp-hero {
-    min-height: 60vh;
+    padding-top: clamp(92px, 12vh, 116px);
   }
 
   .fp-title {
     max-width: 100%;
+    font-size: clamp(1.55rem, 7.4vw, 2.2rem);
   }
 
   .fp-nav {

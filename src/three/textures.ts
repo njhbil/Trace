@@ -138,7 +138,7 @@ export function labelTexture(text: string, accent = "#E3BF6D"): THREE.CanvasText
   return tex;
 }
 
-/** PRNG kecil biar penyebaran pohon deterministik (setiap load sama). */
+/** PRNG kecil agar penyebaran pohon deterministik (sama pada setiap pemuatan). */
 export function mulberry32(seed: number) {
   let a = seed >>> 0;
   return () => {

@@ -129,11 +129,12 @@
   gap: 18px;
 }
 
+/* garis penghubung antar titik — sejajar tepat dengan pusat lingkaran nomor */
 .rute-line {
   position: absolute;
-  left: 27px;
-  top: 30px;
-  bottom: 30px;
+  left: 40px;
+  top: 40px;
+  bottom: 40px;
   width: 2px;
   background: linear-gradient(180deg, var(--gold-600), rgba(201, 162, 39, 0.08));
   z-index: 0;
@@ -143,10 +144,10 @@
   position: relative;
   z-index: 1;
   display: grid;
-  grid-template-columns: auto 150px 1fr;
+  grid-template-columns: 46px 150px minmax(0, 1fr);
   gap: 18px;
   align-items: center;
-  padding: 16px 22px 16px 16px;
+  padding: 16px 22px 16px 18px;
 }
 
 .stop.selesai {
@@ -163,11 +164,8 @@
   opacity: 0.6;
 }
 
+/* lingkaran nomor mengalir di kolom pertama sehingga selalu sejajar dengan garis */
 .stop-check {
-  position: absolute;
-  left: -14px;
-  top: 50%;
-  transform: translateY(-50%);
   width: 46px;
   height: 46px;
   border-radius: 50%;
@@ -179,13 +177,14 @@
   font-family: var(--font-display);
   font-weight: 700;
   font-size: 1rem;
-  transition: all 0.4s var(--ease-out);
-  box-shadow: 0 0 0 6px var(--ink-900);
+  cursor: pointer;
+  transition: border-color 0.35s var(--ease-out), transform 0.35s var(--ease-out), background 0.35s var(--ease-out),
+    color 0.35s var(--ease-out);
 }
 
 .stop-check:hover {
   border-color: var(--gold-500);
-  transform: translateY(-50%) scale(1.08);
+  transform: scale(1.06);
 }
 
 .stop.selesai .stop-check {
@@ -215,13 +214,30 @@
   line-height: 1.35;
 }
 
+/* meta dipisah titik emas kecil, bukan emoji agar konsisten di semua perangkat */
 .stop-meta {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px 18px;
+  align-items: center;
   margin-top: 8px;
   font-size: 0.8rem;
   color: var(--cream-50);
+}
+
+.stop-meta span {
+  display: inline-flex;
+  align-items: center;
+}
+
+.stop-meta span + span::before {
+  content: "";
+  flex: none;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: var(--gold-500);
+  margin: 0 10px;
+  opacity: 0.85;
 }
 
 .stop-body p {
@@ -250,11 +266,16 @@
 }
 
 .stop-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   border: none;
   background: none;
   padding: 0;
   font-size: 0.88rem;
   font-weight: 700;
+  cursor: pointer;
+  transition: opacity 0.3s var(--ease-out);
 }
 
 .stop-link:hover {
@@ -290,23 +311,22 @@
 
 @media (max-width: 720px) {
   .stop {
-    grid-template-columns: 44px 1fr;
-    padding: 14px 16px 16px 18px;
+    grid-template-columns: 46px minmax(0, 1fr);
+    align-items: start;
+    padding: 16px;
     gap: 14px;
   }
+
   .stop-check {
-    position: static;
-    transform: none;
-    width: 40px;
-    height: 40px;
-    box-shadow: none;
+    width: 42px;
+    height: 42px;
+    font-size: 0.95rem;
   }
-  .stop-check:hover {
-    transform: scale(1.06);
-  }
+
   .stop-foto {
     display: none;
   }
+
   .rute-line {
     display: none;
   }
@@ -320,6 +340,7 @@
   .audio-dock,
   .footer,
   .rute-map,
+  .rute-line,
   .rute-actions,
   .rute-end .hero-cta,
   .stop-foto,
@@ -343,6 +364,13 @@
     border: 1px solid #bbb !important;
     box-shadow: none !important;
     break-inside: avoid;
+  }
+
+  /* foto disembunyikan saat dicetak, jadi kolomnya disusun ulang */
+  .stop {
+    grid-template-columns: 46px minmax(0, 1fr);
+    align-items: start;
+    gap: 14px;
   }
 
   .rute-page *,

@@ -9,27 +9,8 @@ import { isSpeechSupported, primeVoices, speak, stopSpeaking } from "../lib/spee
 import { onFirstGesture } from "../lib/gesture";
 import { playEntrance, tick } from "../lib/gamelan";
 import NotFound from "./NotFound";
+import { hostName, namaPendek, tahunPertama } from "../lib/teks";
 import "../styles/fakultas.css";
-
-/** Ambil tahun pertama dari teks berdiri, mis. "1964 (FKIE) · 1981 …" → "1964". */
-const tahunPertama = (t: string) => t.match(/\d{4}/)?.[0] ?? t;
-
-/** Nama domain untuk tombol sumber — aman meski URL tidak valid. */
-const hostName = (u: string) => {
-  try {
-    return new URL(u).hostname.replace(/^www\./, "");
-  } catch {
-    return u.replace(/^https?:\/\//, "").split("/")[0];
-  }
-};
-
-/** "Prof. Dr. Wiwik Sri Utami, M.P." → "Wiwik Sri Utami". */
-const namaPendek = (n: string) =>
-  n
-    .replace(/\([^)]*\)/g, "")
-    .replace(/^(Prof\.(IR\.)?|Dr\.(Hj\.)?|dr\.)\s+/gi, "")
-    .split(",")[0]
-    .trim();
 
 export default function FakultasPage() {
   const { slug } = useParams();
@@ -92,49 +73,68 @@ export default function FakultasPage() {
     <div className="fp" style={{ ["--c" as string]: fak.warna }}>
       {/* ============================= HERO ============================= */}
       <section className="fp-hero">
-        <Foto src={fak.foto} alt={`Gedung ${fak.nama}`} kode={fak.akronim} className="fp-hero-foto" />
-        <div className="fp-hero-mask" />
-
-        <div className="wrap fp-hero-inner">
+        <div className="wrap">
           <button className="fp-back" onClick={() => pergi("/peta")}>
-            ← Kembali ke peta
+            <svg width="14" height="14" viewBox="0 0 16 16" aria-hidden="true" fill="none">
+              <path
+                d="M9.5 3.5 5 8l4.5 4.5"
+                stroke="currentColor"
+                strokeWidth="1.7"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+            Kembali ke peta
           </button>
 
-          <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-          >
-            <div className="fp-hero-tags">
-              <span className="badge-no">{fak.no}</span>
-              <span className="chip">{fak.kampus}</span>
-              <span className="chip">Berdiri {tahunPertama(fak.berdiri)}</span>
-            </div>
+          <div className="fp-hero-grid">
+            <motion.div
+              className="fp-hero-media"
+              initial={{ opacity: 0, y: 22 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.75, ease: [0.16, 1, 0.3, 1] }}
+            >
+              <Foto src={fak.foto} alt={`Gedung ${fak.nama}`} kode={fak.akronim} className="fp-hero-foto" />
+            </motion.div>
 
-            <h1 className="fp-title">{fak.nama}</h1>
-            <p className="fp-akronim">{fak.akronim}</p>
+            <motion.div
+              className="fp-hero-info"
+              initial={{ opacity: 0, y: 26 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.12, ease: [0.16, 1, 0.3, 1] }}
+            >
+              <div className="fp-hero-tags">
+                <span className="badge-no">{fak.no}</span>
+                <span className="chip">{fak.kampus}</span>
+              </div>
 
-            <div className="fp-hero-actions">
-              <button className={`voice-btn ${speaking ? "speaking" : ""}`} onClick={ulangUcapan}>
-                <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true" fill="none">
-                  <path
-                    d="M8.5 2.2 4.8 5.3H2.4v5.4h2.4l3.7 3.1V2.2Z"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                    strokeLinejoin="round"
-                  />
-                  <path
-                    d="M11 5.4a3.6 3.6 0 0 1 0 5.2M12.8 3.4a6.2 6.2 0 0 1 0 9.2"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                  />
-                </svg>
-                {speaking ? "Sedang menyapa" : "Dengar sapaan"}
-              </button>
-              {!isSpeechSupported() && <span className="chip">Perangkat ini belum mendukung suara</span>}
-            </div>
-          </motion.div>
+              <h1 className="fp-title">{fak.nama}</h1>
+              <p className="fp-akronim">
+                {fak.akronim} <i aria-hidden="true">·</i> {fak.namaPendek}
+              </p>
+
+              <div className="fp-hero-actions">
+                <button className={`voice-btn ${speaking ? "speaking" : ""}`} onClick={ulangUcapan}>
+                  <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true" fill="none">
+                    <path
+                      d="M8.5 2.2 4.8 5.3H2.4v5.4h2.4l3.7 3.1V2.2Z"
+                      stroke="currentColor"
+                      strokeWidth="1.5"
+                      strokeLinejoin="round"
+                    />
+                    <path
+                      d="M11 5.4a3.6 3.6 0 0 1 0 5.2M12.8 3.4a6.2 6.2 0 0 1 0 9.2"
+                      stroke="currentColor"
+                      strokeWidth="1.5"
+                      strokeLinecap="round"
+                    />
+                  </svg>
+                  {speaking ? "Sedang menyapa" : "Dengar sapaan"}
+                </button>
+                {!isSpeechSupported() && <span className="chip">Perangkat ini belum mendukung suara</span>}
+              </div>
+            </motion.div>
+          </div>
         </div>
       </section>
 
