@@ -25,15 +25,16 @@ npm run build    # cek tipe + bundel ke dist/
 npm run preview  # pratinjau hasil build
 ```
 
-`vite.config.ts` memakai `base: "./"`, sehingga isi folder `dist/` bisa langsung
-dibuka lewat `file://` atau di-drop ke hosting apa pun (GitHub Pages, Netlify,
-USB, folder bersama) tanpa mengubah apa pun.
+`vite.config.ts` memakai `base: "/"`, sehingga aset tetap benar walau halaman
+dibuka lewat rute bersih seperti `/peta` di hosting apa pun (Vercel, Netlify,
+Apache, dsb.).
 
 ### Rute halaman
 
 Router memakai **hash** (`#/`, `#/peta`, `#/rute`, `#/fakultas/ft`), jadi setiap
-halaman punya tautan stabil yang aman dibagikan atau dipindai — tidak perlu
-konfigurasi *rewrite* apa pun di hosting.
+halaman punya tautan stabil yang aman dibagikan atau dipindai. Tautan bersih
+tanpa hash (`/peta`, `/fakultas/ft`) pun tetap terbuka: `vercel.json` memberi
+*rewrite* ke `index.html`, lalu aplikasi mengubahnya jadi rute hash yang tepat.
 
 ---
 

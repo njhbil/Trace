@@ -446,6 +446,11 @@
     gap: 14px;
   }
 
+  /* kepala dicetak satu kolom agar tidak sempit di kertas */
+  .rute-head {
+    grid-template-columns: 1fr;
+  }
+
   .rute-page *,
   .rute-body * {
     color: #111 !important;

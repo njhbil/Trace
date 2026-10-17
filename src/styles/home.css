@@ -332,6 +332,25 @@
   height: 100%;
 }
 
+/* garis warna fakultas di tepi atas kartu */
+.titik-card::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 3px;
+  background: linear-gradient(90deg, var(--c), transparent 75%);
+  opacity: 0.7;
+  transition: opacity 0.35s var(--ease-out);
+}
+
+.titik-card:hover {
+  background: var(--ink-700);
+}
+
+.titik-card:hover::before {
+  opacity: 1;
+}
+
 .titik-foto {
   height: 190px;
   flex: none;

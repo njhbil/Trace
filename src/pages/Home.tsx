@@ -327,15 +327,15 @@ export default function Home() {
             {[
               {
                 t: "Buka peta",
-                d: "Peta 3D bisa diseret, dizoom, dan ditekan. Penanda bernomor menunjukkan urutan rute wisata kampus.",
+                d: "Putar kampus dengan digeser, perbesar dengan dua jari, lalu pilih penanda bernomor sesuai urutan rute.",
               },
               {
                 t: "Pilih titik",
-                d: "Klik satu fakultas untuk melihat ringkasannya, lalu masuk ke halaman panduannya secara penuh.",
+                d: "Tekan satu fakultas untuk ringkasan singkatnya, atau langsung masuk ke halaman panduan lengkapnya.",
               },
               {
-                t: "Dengar panduan",
-                d: "Sapaan “Selamat datang di Fakultas …” diputar lewat tombol suara, lengkap dengan gamelan latar.",
+                t: "Dengar sapaan",
+                d: "Tekan tombol suara untuk mendengar “Selamat datang di Fakultas …”, ditemani gamelan latar.",
               },
             ].map((s, i) => (
               <Reveal key={s.t} delay={i * 0.08}>

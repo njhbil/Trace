@@ -111,18 +111,20 @@
 
 /* ============================= FAKTA ============================= */
 
+/* empat sel fakta disajikan sebagai kolom bergaris di atas, bukan kotak seragam */
 .fp-fakta {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
-  gap: 14px;
-  margin-top: 26px;
+  gap: clamp(16px, 2.4vw, 30px);
+  margin-top: clamp(26px, 4vw, 40px);
 }
 
 .fp-fakta-item {
-  padding: 18px 20px;
-  border-radius: var(--radius);
-  border: 1px solid var(--line-soft);
-  background: var(--ink-800);
+  padding: 16px 0 0;
+  border: none;
+  border-top: 1px solid var(--line);
+  border-radius: 0;
+  background: transparent;
   display: flex;
   flex-direction: column;
   gap: 5px;
