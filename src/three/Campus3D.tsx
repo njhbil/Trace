@@ -110,8 +110,6 @@ function Scene({
         shadow-bias={-0.0008}
       />
       <directionalLight position={[-26, 16, -20]} intensity={0.75} color="#7FA6D8" />
-      {/* sorot hangat menyorot rektorat di pusat Kampus Lidah Wetan */}
-      <pointLight position={[17.5, 13, 3]} intensity={340} distance={44} decay={2} color="#E3BF6D" />
 
       {/* pulau, jalan, jembatan, landmark, pohon, rute */}
       <Terrain avoid={positions} shadows animasi={!small} />

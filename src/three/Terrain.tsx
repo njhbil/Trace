@@ -156,9 +156,6 @@ function Roads({ shadows }: { shadows: boolean }) {
 /*  Rute tur (jalur emas bercahaya) + "komet" penunjuk arah            */
 /* ------------------------------------------------------------------ */
 export function RoutePath({ points, visible }: { points: { x: number; z: number }[]; visible: boolean }) {
-  const comet = useRef<THREE.Group>(null);
-  const flow = useRef(0);
-
   const curve = useMemo(() => {
     if (points.length < 2) return null;
     const pts = points.map((p) => new THREE.Vector3(p.x, 0.42, p.z));
@@ -167,51 +164,15 @@ export function RoutePath({ points, visible }: { points: { x: number; z: number 
 
   const tubeGeo = useMemo(() => {
     if (!curve) return null;
-    return new THREE.TubeGeometry(curve, 220, 0.13, 8, false);
+    return new THREE.TubeGeometry(curve, 220, 0.11, 8, false);
   }, [curve]);
-
-  useFrame((_, dt) => {
-    if (!visible || !curve || !comet.current) return;
-    flow.current = (flow.current + dt * 0.045) % 1;
-    const p = curve.getPointAt(flow.current);
-    comet.current.position.copy(p);
-    comet.current.visible = true;
-  });
 
   if (!curve || !tubeGeo) return null;
 
   return (
-    <group>
-      <mesh geometry={tubeGeo} visible={visible} raycast={() => null}>
-        <meshStandardMaterial
-          color="#C9A227"
-          emissive="#E3BF6D"
-          emissiveIntensity={1.5}
-          roughness={0.35}
-          metalness={0.5}
-          transparent
-          opacity={0.92}
-        />
-      </mesh>
-
-      {/* penanda arah berjalan */}
-      <group ref={comet} visible={visible}>
-        <mesh raycast={() => null}>
-          <sphereGeometry args={[0.42, 16, 16]} />
-          <meshBasicMaterial color="#FFF0C4" transparent opacity={0.95} />
-        </mesh>
-        <mesh raycast={() => null} scale={2.6}>
-          <sphereGeometry args={[0.42, 12, 12]} />
-          <meshBasicMaterial
-            color="#E3BF6D"
-            transparent
-            opacity={0.16}
-            blending={THREE.AdditiveBlending}
-            depthWrite={false}
-          />
-        </mesh>
-      </group>
-    </group>
+    <mesh geometry={tubeGeo} visible={visible} raycast={() => null}>
+      <meshStandardMaterial color="#C9A227" roughness={0.4} metalness={0.5} transparent opacity={0.8} />
+    </mesh>
   );
 }
 
@@ -355,7 +316,7 @@ function Pulau({ z, tex, shadows }: { z: ZonaPeta; tex: THREE.Texture; shadows: 
 /*  Air (ombak halus antar pulau)                                      */
 /* ------------------------------------------------------------------ */
 function Air({ animasi }: { animasi: boolean }) {
-  const geo = useMemo(() => new THREE.PlaneGeometry(190, 190, 40, 40), []);
+  const geo = useMemo(() => new THREE.PlaneGeometry(900, 900, 48, 48), []);
   const dasar = useMemo(() => Float32Array.from(geo.attributes.position.array), [geo]);
   useEffect(() => () => geo.dispose(), [geo]);
 
@@ -685,48 +646,6 @@ function Rektorat({ shadows }: { shadows: boolean }) {
 }
 
 /* ------------------------------------------------------------------ */
-/*  Debu / kunang-kunang                                               */
-/* ------------------------------------------------------------------ */
-function Motes({ count = 340 }: { count?: number }) {
-  const pts = useRef<THREE.Points>(null);
-
-  const geo = useMemo(() => {
-    const rng = mulberry32(4242);
-    const pos = new Float32Array(count * 3);
-    for (let i = 0; i < count; i++) {
-      const a = rng() * Math.PI * 2;
-      const r = 4 + rng() * 42;
-      pos[i * 3] = 6 + Math.cos(a) * r;
-      pos[i * 3 + 1] = 0.6 + rng() * 13;
-      pos[i * 3 + 2] = 6 + Math.sin(a) * r;
-    }
-    const g = new THREE.BufferGeometry();
-    g.setAttribute("position", new THREE.BufferAttribute(pos, 3));
-    return g;
-  }, [count]);
-
-  useFrame((state, dt) => {
-    if (!pts.current) return;
-    pts.current.rotation.y += dt * 0.012;
-    pts.current.position.y = Math.sin(state.clock.elapsedTime * 0.25) * 0.5;
-  });
-
-  return (
-    <points ref={pts} geometry={geo} raycast={() => null}>
-      <pointsMaterial
-        size={0.16}
-        color="#E3BF6D"
-        transparent
-        opacity={0.55}
-        sizeAttenuation
-        depthWrite={false}
-        blending={THREE.AdditiveBlending}
-      />
-    </points>
-  );
-}
-
-/* ------------------------------------------------------------------ */
 /*  Plakat nama kampus (dicetak di tanah)                              */
 /* ------------------------------------------------------------------ */
 function Plaques() {
@@ -840,7 +759,7 @@ export default function Terrain({
       <MagetanSign shadows={shadows} />
       <Trees shadows={shadows} avoid={avoid} />
       <Traffic shadows={shadows} />
-      {animasi && <Motes />}
+
     </group>
   );
 }

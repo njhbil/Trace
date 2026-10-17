@@ -7,32 +7,16 @@ export function numberTexture(label: string, accent = "#E3BF6D"): THREE.CanvasTe
   c.width = c.height = size;
   const g = c.getContext("2d")!;
 
-  // bayangan lembut
-  g.fillStyle = "rgba(10,7,5,0.55)";
-  g.beginPath();
-  g.arc(size / 2, size / 2 + 6, 88, 0, Math.PI * 2);
-  g.fill();
-
-  // cincin
-  const grad = g.createLinearGradient(20, 20, 236, 236);
-  grad.addColorStop(0, "#F6E3AC");
-  grad.addColorStop(0.5, accent);
-  grad.addColorStop(1, "#8C6B14");
+  // plat datar: lingkaran gelap + cincin solid warna fakultas
   g.fillStyle = "#15100A";
   g.beginPath();
-  g.arc(size / 2, size / 2, 84, 0, Math.PI * 2);
+  g.arc(size / 2, size / 2, 78, 0, Math.PI * 2);
   g.fill();
 
-  g.lineWidth = 9;
-  g.strokeStyle = grad;
+  g.lineWidth = 7;
+  g.strokeStyle = accent;
   g.beginPath();
-  g.arc(size / 2, size / 2, 84, 0, Math.PI * 2);
-  g.stroke();
-
-  g.lineWidth = 2;
-  g.strokeStyle = "rgba(244,235,218,0.35)";
-  g.beginPath();
-  g.arc(size / 2, size / 2, 70, 0, Math.PI * 2);
+  g.arc(size / 2, size / 2, 78, 0, Math.PI * 2);
   g.stroke();
 
   g.fillStyle = "#F4EBDA";

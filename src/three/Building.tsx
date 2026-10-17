@@ -59,7 +59,6 @@ export default function Building({
 }: Props) {
   const group = useRef<THREE.Group>(null);
   const marker = useRef<THREE.Group>(null);
-  const beam = useRef<THREE.Mesh>(null);
   const [hover, setHover] = useState(false);
 
   const { x, z, rotasi = 0 } = f.peta;
@@ -145,19 +144,7 @@ export default function Building({
     [numTex, labTex, winDepan, winSamping, m]
   );
 
-  useFrame((state, dt) => {
-    const t = state.clock.elapsedTime;
-
-    // animasi melayang penanda + goyang halus
-    if (marker.current) {
-      marker.current.position.y = h + 3.1 + Math.sin(t * 1.1 + index) * 0.22;
-      marker.current.rotation.y += dt * (hover || active ? 1.1 : 0.35);
-    }
-    if (beam.current) {
-      const bm = beam.current.material as THREE.MeshBasicMaterial;
-      const target = active ? 0.42 : hover ? 0.3 : dimmed ? 0.05 : 0.16;
-      bm.opacity += (target - bm.opacity) * Math.min(1, dt * 6);
-    }
+  useFrame((_, dt) => {
     // aksen kuningan menyala saat disorot
     const glowTarget = active ? 1.3 : hover ? 0.95 : 0.5;
     m.aksen.emissiveIntensity += (glowTarget - m.aksen.emissiveIntensity) * Math.min(1, dt * 6);
@@ -562,35 +549,16 @@ export default function Building({
         )}
       </group>
 
-      {/* ---- berkas cahaya penunjuk ---- */}
-      <mesh ref={beam} position={[0, (h + 3) / 2 + 0.4, 0]}>
-        <cylinderGeometry args={[0.5, 1.5, h + 3, 16, 1, true]} />
-        <meshBasicMaterial
-          color={f.warna}
-          transparent
-          opacity={0.16}
-          side={THREE.DoubleSide}
-          depthWrite={false}
-          blending={THREE.AdditiveBlending}
-        />
-      </mesh>
-
-      {/* ---- penanda bernomor ---- */}
-      <group ref={marker} position={[0, h + 3.1, 0]}>
-        {/* cincin berdiri — berputar seperti koin, terlihat dari segala sisi */}
-        <mesh>
-          <torusGeometry args={[1.0, 0.055, 8, 40]} />
-          <meshStandardMaterial
-            color={f.warna}
-            emissive={accent}
-            emissiveIntensity={active ? 2.4 : 1.1}
-            roughness={0.3}
-            metalness={0.6}
-          />
+      {/* ---- rambu bernomor: tiang kuningan + plat datar di depan gedung ---- */}
+      <group ref={marker} position={[0, 0, d / 2 + 0.9]}>
+        {/* tiang */}
+        <mesh position={[0, (h + 2.4) / 2 + 0.36, 0]} material={m.pilar}>
+          <cylinderGeometry args={[0.05, 0.05, h + 2.4, 8]} />
         </mesh>
+        {/* plat nomor — menghadap kamera, tanpa animasi */}
         <sprite
-          position={[0, 0, 0]}
-          scale={[1.5, 1.5, 1]}
+          position={[0, h + 2.7, 0]}
+          scale={[1.25, 1.25, 1]}
           onClick={handleClick}
           onPointerOver={(e) => {
             e.stopPropagation();
@@ -602,13 +570,13 @@ export default function Building({
             onHover(null);
           }}
         >
-          <spriteMaterial map={numTex} transparent depthTest={false} />
+          <spriteMaterial map={numTex} transparent />
         </sprite>
 
         {/* label nama — muncul saat hover / aktif */}
         {(hover || active) && (
-          <sprite position={[0, 1.7, 0]} scale={[3.4, 0.85, 1]} raycast={() => null}>
-            <spriteMaterial map={labTex} transparent depthTest={false} />
+          <sprite position={[0, h + 3.8, 0]} scale={[3.4, 0.85, 1]} raycast={() => null}>
+            <spriteMaterial map={labTex} transparent />
           </sprite>
         )}
       </group>
@@ -616,7 +584,7 @@ export default function Building({
       {/* label ringkas ala UI game saat hover */}
       {hover && !active && (
         <Html
-          position={[0, h + 5.0, 0]}
+          position={[0, h + 4.6, d / 2 + 0.9]}
           center
           distanceFactor={26}
           style={{ pointerEvents: "none" }}
