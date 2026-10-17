@@ -205,6 +205,23 @@
 
 /* ============================ PILAR ============================ */
 
+/* Pilar & langkah tampil sebagai kolom editorial bergaris tipis di atas,
+   bukan deretan kotak kartu seragam */
+.pilar-card,
+.step-card {
+  background: transparent;
+  border: none;
+  border-top: 1px solid var(--line);
+  border-radius: 0;
+  box-shadow: none;
+  padding: 22px 0 0;
+}
+
+.pilar-card:hover,
+.step-card:hover {
+  border-top-color: var(--gold-500);
+}
+
 .pilar-card {
   height: 100%;
   min-height: 250px;
@@ -278,34 +295,33 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 8px 14px 8px 8px;
-  border-radius: 999px;
+  padding: 7px 13px 7px 7px;
+  border-radius: 6px;
   border: 1px solid var(--line-soft);
-  background: rgba(244, 235, 218, 0.04);
+  background: rgba(247, 240, 226, 0.04);
   color: var(--cream-70);
   font-size: 0.74rem;
   font-weight: 600;
-  letter-spacing: 0.08em;
-  transition: all 0.4s var(--ease-out);
+  letter-spacing: 0.06em;
+  transition: border-color 0.3s var(--ease-out), background 0.3s var(--ease-out), color 0.3s var(--ease-out);
 }
 
 .rq-item b {
-  width: 24px;
-  height: 24px;
+  width: 22px;
+  height: 22px;
   display: grid;
   place-items: center;
-  border-radius: 50%;
+  border-radius: 4px;
   background: var(--c);
   color: #191410;
   font-family: var(--font-display);
-  font-size: 0.76rem;
+  font-size: 0.74rem;
 }
 
 .rq-item:hover {
-  transform: translateY(-3px);
+  background: rgba(247, 240, 226, 0.09);
   border-color: var(--c);
   color: var(--cream);
-  box-shadow: 0 12px 26px -16px var(--c);
 }
 
 /* ============================ KARTU TITIK ============================ */

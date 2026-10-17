@@ -1,9 +1,10 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 
-// base "./" supaya build hasilnya bisa dibuka langsung (file:// / sub-folder / hosting apa pun)
+// base "/" agar aset tetap benar saat halaman dibuka lewat rute bersih
+// (mis. /peta atau /fakultas/fisipol) di hosting seperti Vercel.
 export default defineConfig({
-  base: "./",
+  base: "/",
   plugins: [react()],
   build: {
     outDir: "dist",

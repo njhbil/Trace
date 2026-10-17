@@ -11,11 +11,40 @@ import FakultasPage from "./pages/FakultasPage";
 import NotFound from "./pages/NotFound";
 import { FAKULTAS } from "./data/fakultas";
 
+/**
+ * Normalisasi alamat masuk.
+ * Situs memakai rute hash (`/#/peta`), tetapi tautan yang dibagikan sering
+ * ditulis tanpa hash (`/peta`). Bila pengunjung membuka rute bersih seperti itu,
+ * URL dikonversi ke rute hash sebelum Router membaca, sehingga halaman yang
+ * dituju tetap terbuka — bukan beranda atau halaman tidak ditemukan.
+ */
+function samakanRuteAwal() {
+  if (typeof window === "undefined") return;
+  const { pathname, search } = window.location;
+  if (!pathname || pathname === "/" || pathname === "/index.html") return;
+  if (/\.[a-z0-9]{2,5}$/i.test(pathname)) return; // berkas statis, biarkan apa adanya
+  window.history.replaceState(null, "", `/#${pathname}${search}`);
+}
+
+samakanRuteAwal();
+
+// posisi gulir selalu dikendalikan aplikasi, bukan dipulihkan otomatis peramban
+if (typeof window !== "undefined" && "scrollRestoration" in window.history) {
+  window.history.scrollRestoration = "manual";
+}
+
+/** Kembali ke paling atas halaman secara instan setiap pindah rute. */
 function ScrollManager() {
-  const { pathname } = useLocation();
+  const { pathname, key } = useLocation();
   useEffect(() => {
-    window.scrollTo({ top: 0, left: 0, behavior: "auto" });
-  }, [pathname]);
+    // html memakai scroll-behavior smooth; matikan dulu agar tidak ada animasi
+    // gulir yang membuat halaman baru terlihat terbuka di posisi tengah.
+    const el = document.documentElement;
+    const sebelumnya = el.style.scrollBehavior;
+    el.style.scrollBehavior = "auto";
+    window.scrollTo(0, 0);
+    el.style.scrollBehavior = sebelumnya;
+  }, [pathname, key]);
   return null;
 }
 

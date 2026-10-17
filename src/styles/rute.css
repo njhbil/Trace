@@ -154,6 +154,18 @@
   border-color: rgba(227, 191, 109, 0.4);
 }
 
+/* aksen warna fakultas di sisi kiri kartu titik */
+.stop::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: linear-gradient(180deg, var(--c), transparent 85%);
+  opacity: 0.8;
+}
+
 .stop.selesai .stop-body h3 {
   color: var(--gold-300);
 }
@@ -310,6 +322,67 @@
 }
 
 @media (max-width: 720px) {
+  /* kepala dirapatkan agar daftar titik cepat terlihat */
+  .rute-head {
+    gap: 22px;
+    margin-bottom: 34px;
+  }
+
+  .rute-chips {
+    margin-top: 16px;
+  }
+
+  /* kartu progres jadi baris ringkas: angka di kiri, bilah progres di kanan */
+  .rute-progress-card {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    column-gap: 16px;
+    row-gap: 2px;
+    align-items: center;
+  }
+
+  .rute-progress-num {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .rute-progress-num b {
+    font-size: 2.4rem;
+  }
+
+  .rute-progress-label {
+    grid-column: 1;
+    grid-row: 2;
+    margin-top: 0;
+  }
+
+  .rute-bar {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+    margin-top: 0;
+    align-self: center;
+    height: 8px;
+  }
+
+  .rute-eta {
+    grid-column: 1 / -1;
+    margin-top: 12px;
+  }
+
+  .rute-actions {
+    grid-column: 1 / -1;
+    margin-top: 14px;
+  }
+
+  .rute-actions .btn {
+    flex: 1 1 auto;
+  }
+
+  .rute-key-list {
+    font-size: 0.88rem;
+    gap: 12px;
+  }
+
   .stop {
     grid-template-columns: 46px minmax(0, 1fr);
     align-items: start;

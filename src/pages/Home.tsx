@@ -95,9 +95,15 @@ export default function Home() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 1.04, duration: 0.9 }}
             >
-              <a className="btn btn-primary" href="#kenali" onClick={() => tick(760)}>
+              <button
+                className="btn btn-primary"
+                onClick={() => {
+                  tick(760);
+                  document.getElementById("kenali")?.scrollIntoView({ behavior: "smooth", block: "start" });
+                }}
+              >
                 Mulai Menjelajah
-              </a>
+              </button>
               <button className="btn btn-ghost" onClick={() => masuk("fisipol")}>
                 Masuk Titik Pertama →
               </button>
@@ -110,7 +116,7 @@ export default function Home() {
             animate={{ opacity: 1 }}
             transition={{ delay: 1.6, duration: 1 }}
           >
-            <span className="hint-dot" /> Seret untuk memutar · klik penanda bernomor untuk masuk
+            <span className="hint-dot" /> Geser ke samping untuk memutar kampus — lalu ketuk nomornya untuk masuk
           </motion.div>
         </div>
 
@@ -247,7 +253,7 @@ export default function Home() {
             <div className="minimap">
               <MiniMap onSelect={masuk} />
               <div className="minimap-caption">
-                Denah ilustratif · klik titik untuk membuka guide fakultas
+                Denah ilustratif · ketuk titik untuk membuka panduan fakultas
               </div>
             </div>
           </Reveal>
@@ -275,7 +281,12 @@ export default function Home() {
           <div className="grid grid-3 titik-grid">
             {FAKULTAS.map((f, i) => (
               <Reveal key={f.slug} delay={(i % 3) * 0.06}>
-                <a className="panel titik-card" href={`#/fakultas/${f.slug}`} onClick={() => tick(880)}>
+                <a
+                  className="panel titik-card"
+                  href={`#/fakultas/${f.slug}`}
+                  onClick={() => tick(880)}
+                  style={{ ["--c" as string]: f.warna }}
+                >
                   <Foto src={f.foto} alt={`Gedung ${f.nama}`} kode={f.akronim} className="titik-foto" />
                   <div className="titik-body">
                     <div className="titik-head">

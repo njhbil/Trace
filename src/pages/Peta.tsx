@@ -42,7 +42,7 @@ export default function Peta() {
           <h1 className="h3" style={{ marginTop: 8 }}>
             Jelajahi {UNESA.jumlahFakultas} Titik Wisata
           </h1>
-          <p className="peta-sub">Seret untuk memutar · scroll untuk zoom · klik penanda</p>
+          <p className="peta-sub">Geser untuk memutar, gulir atau cubit untuk zoom, ketuk penanda untuk membuka panduan</p>
         </div>
 
         <div className="peta-tools">

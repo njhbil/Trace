@@ -170,6 +170,34 @@ export default function Campus3D({ mode = "hero", activeSlug, showRoute = false,
   const reduced =
     typeof window !== "undefined" && window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
 
+  /**
+   * Di beranda, kanvas mengisi layar pertama sepenuhnya. Pada perangkat sentuh,
+   * `touch-action` dipaksa `pan-y` agar geseran vertikal tetap menggulir halaman,
+   * sementara geseran mendatar memutar kamera. Pengunjung tidak lagi bingung
+   * antara menggulir ke bawah dan memutar peta.
+   */
+  useEffect(() => {
+    if (mode !== "hero") return;
+    const el = wrap.current;
+    if (!el || typeof window === "undefined") return;
+    if (!window.matchMedia?.("(pointer: coarse)").matches) return;
+
+    let batal = false;
+    let langkah = 0;
+    const atur = () => {
+      if (batal) return;
+      const canvas = el.querySelector("canvas");
+      if (canvas) canvas.style.touchAction = "pan-y";
+      // OrbitControls memasang touch-action sendiri saat terhubung; ulangi
+      // beberapa frame agar pengaturan kita yang menang.
+      if (langkah++ < 120) requestAnimationFrame(atur);
+    };
+    atur();
+    return () => {
+      batal = true;
+    };
+  }, [mode]);
+
   return (
     <div className={`canvas3d ${className ?? ""}`} ref={wrap} aria-hidden>
       <Canvas
