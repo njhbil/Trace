@@ -1,7 +1,7 @@
 import { useEffect, useLayoutEffect, useMemo, useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
-import { groundTexture, labelTexture, mulberry32 } from "./textures";
+import { groundTexture, labelTexture, mulberry32, windowGridTexture } from "./textures";
 import { ZONA, PULAU_TERHUBUNG, type ZonaPeta } from "../data/fakultas";
 
 type Titik = { x: number; z: number };
@@ -14,8 +14,7 @@ const zona = (kode: string) => ZONA.find((z) => z.kode === kode)!;
 
 /** panjang jalan masuk ke masing-masing pulau (unit peta) */
 const EXT: Record<string, { extA: number; extB: number }> = {
-  "ketintang-pusat": { extA: 2.6, extB: 0.4 },
-  "lidah-pusat": { extA: 2.6, extB: 0.4 },
+  "ketintang-lidah": { extA: 2.6, extB: 2.6 },
   "lidah-kampus3": { extA: 2.6, extB: 1.4 },
   "kampus3-magetan": { extA: 1.4, extB: 1.4 },
 };
@@ -138,9 +137,9 @@ function RingRoad({
 function Roads({ shadows }: { shadows: boolean }) {
   return (
     <group>
-      {/* lingkar dua kampus utama */}
-      <RingRoad c={zona("ketintang")} inner={10.4} outer={12.8} shadows={shadows} />
-      <RingRoad c={zona("lidah")} inner={10.4} outer={12.8} shadows={shadows} />
+      {/* lingkar dua kampus utama — menempel di tepi pulau */}
+      <RingRoad c={zona("ketintang")} inner={13.0} outer={14.4} shadows={shadows} />
+      <RingRoad c={zona("lidah")} inner={13.0} outer={14.4} shadows={shadows} />
       {/* lingkar kecil kampus pendamping */}
       <RingRoad c={zona("kampus3")} inner={4.4} outer={5.6} shadows={shadows} />
       <RingRoad c={zona("magetan")} inner={4.6} outer={5.8} shadows={shadows} />
@@ -229,11 +228,11 @@ function segDist(px: number, pz: number, ax: number, az: number, bx: number, bz:
   return Math.hypot(px - (ax + t * dx), pz - (az + t * dz));
 }
 
-/** true bila titik jatuh di atas aspal atau di area pendopo */
+/** true bila titik jatuh di atas aspal, alun-alun, atau pelataran landmark */
 function onRoad(x: number, z: number) {
   const lingkar: [ZonaPeta, number, number][] = [
-    [zona("ketintang"), 10.4, 12.8],
-    [zona("lidah"), 10.4, 12.8],
+    [zona("ketintang"), 13.0, 14.4],
+    [zona("lidah"), 13.0, 14.4],
     [zona("kampus3"), 4.4, 5.6],
     [zona("magetan"), 4.6, 5.8],
   ];
@@ -244,7 +243,9 @@ function onRoad(x: number, z: number) {
   for (const j of JALAN_ANTAR) {
     if (segDist(x, z, j.pa.x, j.pa.z, j.pb.x, j.pb.z) < 2.1) return true;
   }
-  return Math.hypot(x, z) < 6.8; // pelataran pendopo di pulau pusat
+  // pelataran landmark di pusat dua kampus utama (pendopo & rektorat)
+  if (Math.hypot(x - zona("ketintang").x, z - zona("ketintang").z) < 5.9) return true;
+  return Math.hypot(x - zona("lidah").x, z - zona("lidah").z) < 5.9;
 }
 
 function Trees({ count = 76, shadows, avoid }: { count?: number; shadows: boolean; avoid: Titik[] }) {
@@ -264,7 +265,7 @@ function Trees({ count = 76, shadows, avoid }: { count?: number; shadows: boolea
       const a = rng() * Math.PI * 2;
       const x = p.x + Math.cos(a) * radius;
       const zz = p.z + Math.sin(a) * radius;
-      const clash = avoid.some((q) => Math.hypot(q.x - x, q.z - zz) < 4.4);
+      const clash = avoid.some((q) => Math.hypot(q.x - x, q.z - zz) < 4.8);
       if (clash || onRoad(x, zz)) continue;
       out.push({ x, z: zz, s: 0.75 + rng() * 0.7, r: rng() * Math.PI });
     }
@@ -309,7 +310,6 @@ function Trees({ count = 76, shadows, avoid }: { count?: number; shadows: boolea
 
 const WARNA_RUMPUT: Record<string, string> = {
   ketintang: "#A8B894",
-  pusat: "#9DAE88",
   lidah: "#A2B492",
   kampus3: "#9FB08C",
   magetan: "#C2A684",
@@ -436,21 +436,22 @@ function Mobil({ warna, bus, shadows }: { warna: string; bus: boolean; shadows: 
   );
 
   if (bus) {
+    // panjang badan di sumbu Z — searah "maju" (rotasi konvoi memakai +Z)
     return (
       <group>
         <mesh position={[0, 0.35, 0]} castShadow={shadows} material={badan}>
-          <boxGeometry args={[2.0, 0.62, 0.78]} />
+          <boxGeometry args={[0.78, 0.62, 2.0]} />
         </mesh>
         <mesh position={[0, 0.76, 0]} castShadow={shadows} material={badan}>
-          <boxGeometry args={[1.8, 0.3, 0.7]} />
+          <boxGeometry args={[0.7, 0.3, 1.8]} />
         </mesh>
-        <mesh position={[0, 0.58, 0.4]} material={kacaBus}>
-          <planeGeometry args={[1.6, 0.24]} />
+        <mesh position={[0, 0.58, 1.01]} material={kacaBus}>
+          <planeGeometry args={[0.62, 0.24]} />
         </mesh>
-        {lampu([0.3, 0.24, 0.92], lampuDpn, 0.06)}
-        {lampu([-0.3, 0.24, 0.92], lampuDpn, 0.06)}
-        {lampu([0.3, 0.24, -0.92], lampuBlkg, 0.05)}
-        {lampu([-0.3, 0.24, -0.92], lampuBlkg, 0.05)}
+        {lampu([0.24, 0.24, 1.0], lampuDpn, 0.06)}
+        {lampu([-0.24, 0.24, 1.0], lampuDpn, 0.06)}
+        {lampu([0.24, 0.24, -1.0], lampuBlkg, 0.05)}
+        {lampu([-0.24, 0.24, -1.0], lampuBlkg, 0.05)}
       </group>
     );
   }
@@ -458,15 +459,15 @@ function Mobil({ warna, bus, shadows }: { warna: string; bus: boolean; shadows: 
   return (
     <group>
       <mesh position={[0, 0.19, 0]} castShadow={shadows} material={badan}>
-        <boxGeometry args={[0.95, 0.28, 0.5]} />
+        <boxGeometry args={[0.5, 0.28, 0.95]} />
       </mesh>
-      <mesh position={[0, 0.4, -0.04]} castShadow={shadows} material={badan}>
-        <boxGeometry args={[0.5, 0.2, 0.44]} />
+      <mesh position={[0, 0.4, -0.06]} castShadow={shadows} material={badan}>
+        <boxGeometry args={[0.44, 0.2, 0.5]} />
       </mesh>
-      {lampu([0.18, 0.17, 0.26], lampuDpn, 0.05)}
-      {lampu([-0.18, 0.17, 0.26], lampuDpn, 0.05)}
-      {lampu([0.18, 0.17, -0.26], lampuBlkg, 0.045)}
-      {lampu([-0.18, 0.17, -0.26], lampuBlkg, 0.045)}
+      {lampu([0.16, 0.17, 0.45], lampuDpn, 0.05)}
+      {lampu([-0.16, 0.17, 0.45], lampuDpn, 0.05)}
+      {lampu([0.16, 0.17, -0.45], lampuBlkg, 0.045)}
+      {lampu([-0.16, 0.17, -0.45], lampuBlkg, 0.045)}
     </group>
   );
 }
@@ -479,10 +480,10 @@ function Traffic({ shadows }: { shadows: boolean }) {
     const B = zona("lidah");
     const bus = JALAN_ANTAR.find((j) => j.kode === "kampus3-magetan")!;
     return [
-      { tipe: "lingkar", c: A, r: 11.6, laju: 0.24, fase: 0, warna: "#C85F36" },
-      { tipe: "lingkar", c: A, r: 11.6, laju: -0.19, fase: Math.PI, warna: "#D9CDB4" },
-      { tipe: "lingkar", c: B, r: 11.6, laju: 0.21, fase: 1.2, warna: "#35957F" },
-      { tipe: "lingkar", c: B, r: 11.6, laju: -0.26, fase: 4.0, warna: "#5668A3" },
+      { tipe: "lingkar", c: A, r: 13.7, laju: 0.24, fase: 0, warna: "#C85F36" },
+      { tipe: "lingkar", c: A, r: 13.7, laju: -0.19, fase: Math.PI, warna: "#D9CDB4" },
+      { tipe: "lingkar", c: B, r: 13.7, laju: 0.21, fase: 1.2, warna: "#35957F" },
+      { tipe: "lingkar", c: B, r: 13.7, laju: -0.26, fase: 4.0, warna: "#5668A3" },
       { tipe: "jalan", a: bus.pa, b: bus.pb, laju: 0.14, fase: 0, warna: "#E3BF6D" },
       { tipe: "jalan", a: bus.pa, b: bus.pb, laju: 0.14, fase: Math.PI, warna: "#D9CDB4" },
     ];
@@ -527,7 +528,7 @@ function Traffic({ shadows }: { shadows: boolean }) {
 }
 
 /* ------------------------------------------------------------------ */
-/*  Pendopo pusat (landmark)                                           */
+/*  Pendopo budaya — kini berdiri di alun-alun Kampus Ketintang        */
 /* ------------------------------------------------------------------ */
 function Pendopo({ shadows }: { shadows: boolean }) {
   return (
@@ -572,6 +573,113 @@ function Pendopo({ shadows }: { shadows: boolean }) {
           </mesh>
         );
       })}
+    </group>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/*  Gedung Rektorat — pusat Kampus Lidah Wetan                         */
+/* ------------------------------------------------------------------ */
+function Rektorat({ shadows }: { shadows: boolean }) {
+  const winTex = useMemo(() => windowGridTexture(6, 9, "#FFD98A"), []);
+  const signTex = useMemo(() => labelTexture("UNESA", "#C9A227"), []);
+  useEffect(
+    () => () => {
+      winTex.dispose();
+      signTex.dispose();
+    },
+    [winTex, signTex]
+  );
+
+  /** pita jendela kaca di salah satu sisi menara */
+  const pitaJendela = (pos: [number, number, number], rotY: number, lebar: number) => (
+    <mesh position={pos} rotation={[0, rotY, 0]} raycast={() => null}>
+      <planeGeometry args={[lebar, 6.4]} />
+      <meshBasicMaterial map={winTex} transparent opacity={0.9} />
+    </mesh>
+  );
+
+  return (
+    <group>
+      {/* pelataran batu + undakan masuk */}
+      <mesh position={[0, 0.15, 0]} receiveShadow={shadows} castShadow={shadows}>
+        <cylinderGeometry args={[5.1, 5.35, 0.3, 32]} />
+        <meshStandardMaterial color="#6B5B43" roughness={1} />
+      </mesh>
+      {[0, 1, 2].map((i) => (
+        <mesh key={i} position={[0, 0.05 + i * 0.08, 3.4 + i * 0.45]} castShadow={shadows} receiveShadow={shadows}>
+          <boxGeometry args={[4.4 - i * 0.5, 0.16, 0.9]} />
+          <meshStandardMaterial color="#8A7A5E" roughness={1} />
+        </mesh>
+      ))}
+
+      {/* podium dua lantai + pita kuningan */}
+      <mesh position={[0, 1.25, 0]} castShadow={shadows} receiveShadow={shadows}>
+        <boxGeometry args={[7.4, 1.8, 6.0]} />
+        <meshStandardMaterial color="#B7AC97" roughness={0.92} />
+      </mesh>
+      <mesh position={[0, 2.22, 0]}>
+        <boxGeometry args={[7.56, 0.16, 6.16]} />
+        <meshStandardMaterial color="#C9A227" metalness={0.65} roughness={0.35} />
+      </mesh>
+
+      {/* pintu utama kaca */}
+      <mesh position={[0, 1.2, 3.02]}>
+        <boxGeometry args={[2.4, 1.6, 0.12]} />
+        <meshStandardMaterial color="#14243A" metalness={0.4} roughness={0.2} />
+      </mesh>
+
+      {/* menara utama berpita jendela */}
+      <mesh position={[0, 6.2, -0.3]} castShadow={shadows} receiveShadow={shadows}>
+        <boxGeometry args={[5.2, 7.8, 4.4]} />
+        <meshStandardMaterial color="#C4B99F" roughness={0.9} />
+      </mesh>
+      {pitaJendela([0, 6.0, 1.92], 0, 4.4)}
+      {pitaJendela([0, 6.0, -2.52], Math.PI, 4.4)}
+      {pitaJendela([2.62, 6.0, -0.3], Math.PI / 2, 3.6)}
+      {pitaJendela([-2.62, 6.0, -0.3], -Math.PI / 2, 3.6)}
+      {[4.0, 5.9, 7.8].map((yy) => (
+        <mesh key={yy} position={[0, yy, -0.3]}>
+          <boxGeometry args={[5.32, 0.12, 4.52]} />
+          <meshStandardMaterial color="#C9A227" metalness={0.6} roughness={0.4} />
+        </mesh>
+      ))}
+
+      {/* mahkota atap + papan nama UNESA */}
+      <mesh position={[0, 10.25, -0.3]} castShadow={shadows}>
+        <boxGeometry args={[5.6, 0.4, 4.8]} />
+        <meshStandardMaterial color="#C9A227" metalness={0.7} roughness={0.35} />
+      </mesh>
+      <mesh position={[0, 9.4, 1.94]} raycast={() => null}>
+        <planeGeometry args={[3.6, 0.9]} />
+        <meshBasicMaterial map={signTex} transparent />
+      </mesh>
+
+      {/* sayap kiri-kanan rendah */}
+      {[-1, 1].map((s) => (
+        <mesh key={s} position={[s * 3.6, 1.0, -0.6]} castShadow={shadows} receiveShadow={shadows}>
+          <boxGeometry args={[2.0, 1.4, 3.4]} />
+          <meshStandardMaterial color="#ABA08B" roughness={0.92} />
+        </mesh>
+      ))}
+
+      {/* tiang bendera merah-putih di halaman depan */}
+      {[-2.9, 2.9].map((px) => (
+        <group key={px}>
+          <mesh position={[px, 2.85, 3.4]} castShadow={shadows}>
+            <cylinderGeometry args={[0.055, 0.07, 5.2, 6]} />
+            <meshStandardMaterial color="#9C9585" metalness={0.7} roughness={0.35} />
+          </mesh>
+          <mesh position={[px + 0.42, 5.12, 3.4]}>
+            <boxGeometry args={[0.8, 0.32, 0.04]} />
+            <meshStandardMaterial color="#C63A2E" />
+          </mesh>
+          <mesh position={[px + 0.42, 4.8, 3.4]}>
+            <boxGeometry args={[0.8, 0.32, 0.04]} />
+            <meshStandardMaterial color="#EFE9DC" />
+          </mesh>
+        </group>
+      ))}
     </group>
   );
 }
@@ -639,10 +747,12 @@ function Plaques() {
         const img = tex.image as HTMLCanvasElement;
         const aspect = img ? img.height / img.width : 0.25;
         const pos = z.plakat ?? { x: z.x, z: z.z };
+        // plakat diputar sejajar lengkung pulau agar muat di halaman masuk
+        const phi = Math.atan2(pos.z - z.z, pos.x - z.x);
         return (
           <mesh
             key={z.kode}
-            rotation={[-Math.PI / 2, 0, 0]}
+            rotation={[-Math.PI / 2, 0, -(Math.PI / 2 + phi)]}
             position={[pos.x, 0.185, pos.z]}
             raycast={() => null}
             renderOrder={2}
@@ -664,14 +774,14 @@ function MagetanSign({ shadows }: { shadows: boolean }) {
   useEffect(() => () => tex.dispose(), [tex]);
   const img = tex.image as HTMLCanvasElement;
   const aspect = img ? img.height / img.width : 0.25;
-  const pos = { x: 24.2, z: 18.6 };
+  const pos = { x: 30.2, z: 20.4 };
   const rot = Math.atan2(-pos.x, -pos.z);
 
   return (
     <group position={[pos.x, 0, pos.z]} rotation={[0, rot, 0]}>
       {[-1.9, 1.9].map((px) => (
-        <mesh key={px} position={[px, 1.6, 0]} castShadow={shadows}>
-          <cylinderGeometry args={[0.12, 0.14, 3.2, 8]} />
+        <mesh key={px} position={[px, 0.7, 0]} castShadow={shadows}>
+          <cylinderGeometry args={[0.12, 0.14, 5.0, 8]} />
           <meshStandardMaterial color="#5A4426" roughness={0.9} />
         </mesh>
       ))}
@@ -717,7 +827,15 @@ export default function Terrain({
       ))}
 
       <Roads shadows={shadows} />
-      <Pendopo shadows={shadows} />
+
+      {/* landmark pusat: pendopo budaya di Ketintang, rektorat di Lidah Wetan */}
+      <group position={[zona("ketintang").x, 0, zona("ketintang").z]} scale={0.7}>
+        <Pendopo shadows={shadows} />
+      </group>
+      <group position={[zona("lidah").x, 0, zona("lidah").z]} rotation={[0, -1.193, 0]}>
+        <Rektorat shadows={shadows} />
+      </group>
+
       <Plaques />
       <MagetanSign shadows={shadows} />
       <Trees shadows={shadows} avoid={avoid} />

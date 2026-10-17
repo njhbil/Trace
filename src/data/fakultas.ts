@@ -69,36 +69,35 @@ export type RagamGedung =
 const img = (name: string) => `${import.meta.env.BASE_URL}assets/fakultas/${name}`;
 
 /* ---------- helper penempatan di peta (ilustratif, bukan denah teknis) ---------- */
-const zonaA = { x: -15.5, z: -2.5 }; // Kampus 1 Ketintang
-const zonaB = { x: 15.5, z: 2.5 }; // Kampus 2 Lidah Wetan
+const zonaA = { x: -17.5, z: -3 }; // Kampus 1 Ketintang
+const zonaB = { x: 17.5, z: 3 }; // Kampus 2 Lidah Wetan
+const R_ARC = 9.6; // jari-jari lingkar gedung fakultas
 
-/** arahkan pintu gedung menghadap pusat pulau */
-function face(p: { x: number; z: number }) {
-  return +Math.atan2(-p.x, -p.z).toFixed(3);
+/** arahkan pintu gedung menghadap pusat pulau sendiri (alun-alun) */
+function face(p: { x: number; z: number }, center: { x: number; z: number }) {
+  return +Math.atan2(center.x - p.x, center.z - p.z).toFixed(3);
 }
 
-function arc(
-  center: { x: number; z: number },
-  radius: number,
-  index: number,
-  total: number,
-  from: number,
-  to: number
-) {
-  const step = (to - from) / Math.max(1, total - 1);
-  const a = ((from + step * index) * Math.PI) / 180;
-  const p = { x: +(center.x + radius * Math.cos(a)).toFixed(2), z: +(center.z + radius * Math.sin(a)).toFixed(2) };
-  return { ...p, rotasi: face(p) };
+/**
+ * Gedung fakultas ditaruh melingkar mengelilingi alun-alun pusat pulau,
+ * bukan berjajar rapat di satu sisi. Jarak antartitik ~3,4 unit sehingga
+ * lebar gedung mana pun masih menyisakan celah — tidak terlihat menumpuk.
+ * Busur dibuka 60° ke arah jembatan; bagian kosong itu jadi halaman masuk.
+ */
+function arc(center: { x: number; z: number }, index: number, total: number, from: number) {
+  const a = ((from + (360 / total) * index) * Math.PI) / 180;
+  const p = { x: +(center.x + R_ARC * Math.cos(a)).toFixed(2), z: +(center.z + R_ARC * Math.sin(a)).toFixed(2) };
+  return { ...p, rotasi: face(p, center) };
 }
 
-/** 6 fakultas Kampus Ketintang — busur sisi kiri pulau (1→6) */
-const petaKetintang = (i: number) => arc(zonaA, 9.2, i, 6, 104, 256);
-/** 6 unit Kampus Lidah Wetan — busur sisi kanan (7→11 + Pasca Sarjana) */
-const petaLidah = (i: number) => arc(zonaB, 9.6, i, 6, -78, 58);
+/** 6 fakultas Kampus Ketintang — lingkar penuh, terbuka ke arah jembatan (9,75°) */
+const petaKetintang = (i: number) => arc(zonaA, i, 6, 39.75);
+/** 6 unit Kampus Lidah Wetan — terbuka ke arah dua jembatan (158,4°) */
+const petaLidah = (i: number) => arc(zonaB, i, 6, 188.4);
 /** titik di luar dua kampus utama */
-const petaMagetan = { x: 36, z: 14, rotasi: face({ x: 36, z: 14 }) };
-const petaKampus3 = { x: 2, z: 23.5, rotasi: face({ x: 2, z: 23.5 }) };
-/** Pasca Sarjana kampusnya di Lidah Wetan — ujung busur yang sama */
+const petaMagetan = { x: 39, z: 16.5, rotasi: face({ x: 39, z: 16.5 }, { x: 0, z: 0 }) };
+const petaKampus3 = { x: 2, z: 23.5, rotasi: face({ x: 2, z: 23.5 }, { x: 0, z: 0 }) };
+/** Pasca Sarjana kampusnya di Lidah Wetan — ujung lingkar yang sama */
 const petaPasca = petaLidah(5);
 
 /**
@@ -122,21 +121,21 @@ export const ZONA: ZonaPeta[] = [
     label: "KAMPUS 1 · KETINTANG",
     x: zonaA.x,
     z: zonaA.z,
-    radius: 13.6,
-    lebar: 11,
-    plakat: { x: zonaA.x, z: zonaA.z - 8 },
+    radius: 15.5,
+    lebar: 8,
+    plakat: { x: -7.84, z: -1.34 },
   },
   {
     kode: "lidah",
     label: "KAMPUS 2 · LIDAH WETAN",
     x: zonaB.x,
     z: zonaB.z,
-    radius: 13.6,
-    lebar: 12,
-    plakat: { x: zonaB.x, z: zonaB.z - 8 },
+    radius: 15.5,
+    lebar: 8,
+    plakat: { x: 8.36, z: 6.58 },
   },
   { kode: "kampus3", label: "KAMPUS 3 · KEPUTIH", x: 2, z: 23.5, radius: 6.8, lebar: 5.5, plakat: { x: 2, z: 20.4 } },
-  { kode: "magetan", label: "PSDKU · MAGETAN", x: 36, z: 14, radius: 6.4, lebar: 5.5, plakat: { x: 36, z: 10.6 } },
+  { kode: "magetan", label: "PSDKU · MAGETAN", x: 39, z: 16.5, radius: 6.4, lebar: 5.5, plakat: { x: 39, z: 13.1 } },
 ];
 
 /** pasangan pulau kampus yang dihubungkan jembatan */
@@ -206,7 +205,7 @@ export const FAKULTAS: Fakultas[] = [
     foto: img("FISIPOL.jpeg"),
     peta: petaKetintang(0),
     ragamGedung: "menara",
-    dimensiGedung: { w: 5.6, d: 4.6, h: 8.2 },
+    dimensiGedung: { w: 4.8, d: 4.6, h: 8.2 },
     sumber: ["https://fisipol.unesa.ac.id/"],
   },
 
@@ -266,7 +265,7 @@ export const FAKULTAS: Fakultas[] = [
     foto: img("FEB.jpeg"),
     peta: petaKetintang(1),
     ragamGedung: "kolonial",
-    dimensiGedung: { w: 6.8, d: 4.8, h: 3.8 },
+    dimensiGedung: { w: 5.8, d: 4.8, h: 3.8 },
     sumber: ["https://feb.unesa.ac.id/"],
   },
 
@@ -335,7 +334,7 @@ export const FAKULTAS: Fakultas[] = [
     foto: img("FV.jpeg"),
     peta: petaKetintang(2),
     ragamGedung: "industri",
-    dimensiGedung: { w: 7.6, d: 5.2, h: 3.2 },
+    dimensiGedung: { w: 6.0, d: 5.2, h: 3.2 },
     sumber: ["https://vokasi.unesa.ac.id/", "https://ft.unesa.ac.id/"],
   },
 
@@ -386,7 +385,7 @@ export const FAKULTAS: Fakultas[] = [
     foto: img("FH.jpeg"),
     peta: petaKetintang(3),
     ragamGedung: "kolonial",
-    dimensiGedung: { w: 6.4, d: 4.6, h: 3.6 },
+    dimensiGedung: { w: 5.8, d: 4.6, h: 3.6 },
     sumber: ["https://fh.unesa.ac.id/", "https://fh.unesa.ac.id/page/sejarah-jurusan-hukum"],
   },
 
@@ -457,7 +456,7 @@ export const FAKULTAS: Fakultas[] = [
     foto: img("FMIPA.jpeg"),
     peta: petaKetintang(4),
     ragamGedung: "riset",
-    dimensiGedung: { w: 5.8, d: 5.0, h: 4.4 },
+    dimensiGedung: { w: 5.4, d: 5.0, h: 4.4 },
     sumber: ["https://fmipa.unesa.ac.id/", "https://fmipa.unesa.ac.id/2026/01/selayang-pandang/"],
   },
 
@@ -524,7 +523,7 @@ export const FAKULTAS: Fakultas[] = [
     foto: img("FT.PNG"),
     peta: petaKetintang(5),
     ragamGedung: "industri",
-    dimensiGedung: { w: 7.2, d: 5.0, h: 3.4 },
+    dimensiGedung: { w: 6.0, d: 5.0, h: 3.4 },
     sumber: ["https://ft.unesa.ac.id/"],
   },
 
@@ -662,7 +661,7 @@ export const FAKULTAS: Fakultas[] = [
     foto: img("FBS.jpeg"),
     peta: petaLidah(1),
     ragamGedung: "joglo",
-    dimensiGedung: { w: 5.8, d: 4.8, h: 3.4 },
+    dimensiGedung: { w: 5.4, d: 4.8, h: 3.4 },
     sumber: ["https://fbs.unesa.ac.id/", "https://fbs.unesa.ac.id/page/sejarah"],
   },
 
@@ -727,7 +726,7 @@ export const FAKULTAS: Fakultas[] = [
     foto: img("FIKK.jpeg"),
     peta: petaLidah(2),
     ragamGedung: "olahraga",
-    dimensiGedung: { w: 7.8, d: 6.4, h: 4.2 },
+    dimensiGedung: { w: 6.2, d: 5.6, h: 4.2 },
     sumber: ["https://fikk.unesa.ac.id/page/sejarah", "https://fikk.unesa.ac.id/page/laboratorium"],
   },
 
@@ -778,7 +777,7 @@ export const FAKULTAS: Fakultas[] = [
     foto: img("FPSI.png"),
     peta: petaLidah(3),
     ragamGedung: "minimalis",
-    dimensiGedung: { w: 5.8, d: 4.4, h: 4.8 },
+    dimensiGedung: { w: 5.6, d: 4.4, h: 4.8 },
     sumber: ["https://psikologi.unesa.ac.id/page/sejarah", "https://psikologi.unesa.ac.id/page/struktur-organisasi"],
   },
 
@@ -837,7 +836,7 @@ export const FAKULTAS: Fakultas[] = [
     foto: img("FK.jpeg"),
     peta: petaLidah(4),
     ragamGedung: "medis",
-    dimensiGedung: { w: 6.0, d: 5.0, h: 6.6 },
+    dimensiGedung: { w: 5.4, d: 5.0, h: 6.6 },
     sumber: ["https://fk.unesa.ac.id/", "https://fk.unesa.ac.id/page/akreditasi"],
   },
 

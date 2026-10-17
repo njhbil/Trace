@@ -72,16 +72,16 @@ body {
   text-rendering: optimizeLegibility;
 }
 
-/* motif kawung di seluruh halaman — dibuat terasa, bukan sekadar samar */
+/* motif kawung di seluruh halaman — halus, sekadar memberi karakter */
 body::before {
   content: "";
   position: fixed;
   inset: 0;
   z-index: 0;
   pointer-events: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64' viewBox='0 0 64 64'%3E%3Cg fill='none' stroke='%23c9a227' stroke-opacity='0.18' stroke-width='1'%3E%3Cellipse cx='16' cy='16' rx='13' ry='17'/%3E%3Cellipse cx='48' cy='16' rx='13' ry='17'/%3E%3Cellipse cx='16' cy='48' rx='13' ry='17'/%3E%3Cellipse cx='48' cy='48' rx='13' ry='17'/%3E%3Cpath d='M32 3v8M32 53v8M3 32h8M53 32h8'/%3E%3C/g%3E%3Cg fill='%23c9a227' fill-opacity='0.22'%3E%3Ccircle cx='16' cy='16' r='2.4'/%3E%3Ccircle cx='48' cy='16' r='2.4'/%3E%3Ccircle cx='16' cy='48' r='2.4'/%3E%3Ccircle cx='48' cy='48' r='2.4'/%3E%3C/g%3E%3C/svg%3E");
-  background-size: 58px 58px;
-  opacity: 0.6;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64' viewBox='0 0 64 64'%3E%3Cg fill='none' stroke='%23c9a227' stroke-opacity='0.1' stroke-width='1'%3E%3Cellipse cx='16' cy='16' rx='13' ry='17'/%3E%3Cellipse cx='48' cy='16' rx='13' ry='17'/%3E%3Cellipse cx='16' cy='48' rx='13' ry='17'/%3E%3Cellipse cx='48' cy='48' rx='13' ry='17'/%3E%3C/g%3E%3C/svg%3E");
+  background-size: 76px 76px;
+  opacity: 0.32;
   mask-image: linear-gradient(180deg, #000 0%, rgba(0, 0, 0, 0.72) 46%, rgba(0, 0, 0, 0.92) 100%);
   -webkit-mask-image: linear-gradient(180deg, #000 0%, rgba(0, 0, 0, 0.72) 46%, rgba(0, 0, 0, 0.92) 100%);
 }
@@ -92,7 +92,7 @@ body::after {
   inset: 0;
   z-index: 9998;
   pointer-events: none;
-  opacity: 0.14;
+  opacity: 0.1;
   mix-blend-mode: overlay;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E");
 }

@@ -1,6 +1,6 @@
 import { FAKULTAS, ZONA, PULAU_TERHUBUNG } from "../data/fakultas";
 
-const S = 4.6; // skala: dunia (meter) → piksel SVG
+const S = 4.1; // skala: dunia (meter) → piksel SVG (muat sampai Magetan)
 const C = 200; // pusat kanvas SVG
 
 export const toSvg = (x: number, z: number) => ({ cx: C + x * S, cy: C + z * S });
@@ -30,7 +30,9 @@ export default function MiniMap({ activeSlug, onSelect, showRoute = true, compac
   const A = toSvg(zonaBy("ketintang").x, zonaBy("ketintang").z);
   const B = toSvg(zonaBy("lidah").x, zonaBy("lidah").z);
   const K3 = toSvg(2, 19.6);
-  const MGT = toSvg(34, 8.6);
+  const MGT = toSvg(37, 11.1);
+  const P1 = toSvg(zonaBy("ketintang").plakat!.x, zonaBy("ketintang").plakat!.z);
+  const P2 = toSvg(zonaBy("lidah").plakat!.x, zonaBy("lidah").plakat!.z);
 
   return (
     <svg viewBox="0 0 400 400" className={className} role="img" aria-label="Denah rute kampus UNESA">
@@ -96,10 +98,12 @@ export default function MiniMap({ activeSlug, onSelect, showRoute = true, compac
         );
       })}
 
-      {/* pendopo pusat */}
+      {/* landmark pusat: lingkaran = pendopo (Ketintang), persegi = rektorat (Lidah) */}
       <g opacity="0.75">
-        <circle cx={C} cy={C} r={16} fill="none" stroke="#C9A227" strokeWidth="1.5" />
-        <circle cx={C} cy={C} r={7} fill="#C9A227" opacity="0.55" />
+        <circle cx={A.cx} cy={A.cy} r={13} fill="none" stroke="#C9A227" strokeWidth="1.5" />
+        <circle cx={A.cx} cy={A.cy} r={5.5} fill="#C9A227" opacity="0.55" />
+        <rect x={B.cx - 6.5} y={B.cy - 6.5} width={13} height={13} fill="none" stroke="#C9A227" strokeWidth="1.5" />
+        <rect x={B.cx - 2.5} y={B.cy - 2.5} width={5} height={5} fill="#C9A227" opacity="0.55" />
       </g>
 
       {/* jalur rute */}
@@ -159,10 +163,10 @@ export default function MiniMap({ activeSlug, onSelect, showRoute = true, compac
 
       {!compact && (
         <>
-          <text x={A.cx} y={A.cy + 4} textAnchor="middle" className="mm-zone">
+          <text x={P1.cx} y={P1.cy + 4} textAnchor="middle" className="mm-zone">
             KAMPUS 1
           </text>
-          <text x={B.cx} y={B.cy + 4} textAnchor="middle" className="mm-zone">
+          <text x={P2.cx} y={P2.cy + 4} textAnchor="middle" className="mm-zone">
             KAMPUS 2
           </text>
           <text x={K3.cx} y={K3.cy + 4} textAnchor="middle" className="mm-zone">

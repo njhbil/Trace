@@ -227,9 +227,9 @@ export default function Building({
             {/* fasad kaca depan & samping */}
             {jendela([0, 1.35 + h / 2, d / 2 + 0.03], w * 0.82)}
             {jendela([w / 2 + 0.03, 1.35 + h / 2, 0], d * 0.8, Math.PI / 2, winSamping)}
-            {/* sayap rendah samping */}
-            <mesh position={[-(w / 2 + 1.2), 1.05, -d * 0.12]} castShadow={shadows} material={m.badan}>
-              <boxGeometry args={[2.4, 1.4, d * 0.8]} />
+            {/* sayap rendah di belakang (menjaga lebar tapak) */}
+            <mesh position={[-(w * 0.22), 1.05, -(d * 0.35)]} castShadow={shadows} material={m.badan}>
+              <boxGeometry args={[2.4, 1.4, d * 0.5]} />
             </mesh>
             {/* mahkota atap + tiang bendera */}
             <mesh position={[0, 1.35 + h + 0.13, 0]} castShadow={shadows} material={m.atap}>
@@ -316,9 +316,9 @@ export default function Building({
                 <cylinderGeometry args={[0.32, 0.32, 0.18, 12]} />
               </mesh>
             ))}
-            {/* aneks rendah + kanopi pintu */}
-            <mesh position={[-(w / 2 + 1.0), 0.95, d * 0.22]} castShadow={shadows} material={m.badan}>
-              <boxGeometry args={[2.0, 1.2, d * 0.6]} />
+            {/* aneks rendah di belakang (menjaga lebar tapak) */}
+            <mesh position={[-(w * 0.28), 0.95, -(d * 0.32)]} castShadow={shadows} material={m.badan}>
+              <boxGeometry args={[2.0, 1.2, d * 0.56]} />
             </mesh>
             <mesh position={[0, h * 0.62, d / 2 + 0.5]} castShadow={shadows} material={m.atap}>
               <boxGeometry args={[w * 0.5, 0.14, 1.0]} />
@@ -348,12 +348,12 @@ export default function Building({
                 <sphereGeometry args={[1.15, 24, 12, 0, Math.PI * 2, 0, Math.PI / 2]} />
               </mesh>
             </group>
-            {/* silo tabung (ruang reaktor/simulasi)) */}
-            <mesh position={[-(w / 2 + 0.95), h * 0.4 + 0.36, d * 0.18]} castShadow={shadows} material={m.badan}>
-              <cylinderGeometry args={[1.0, 1.05, h * 0.8, 16]} />
+            {/* silo tabung (ruang reaktor/simulasi) di belakang blok */}
+            <mesh position={[-(w * 0.28), h * 0.4 + 0.36, -(d * 0.3)]} castShadow={shadows} material={m.badan}>
+              <cylinderGeometry args={[0.9, 0.95, h * 0.8, 16]} />
             </mesh>
-            <mesh position={[-(w / 2 + 0.95), h * 0.8 + 0.55, d * 0.18]} material={m.aksen}>
-              <cylinderGeometry args={[1.08, 1.08, 0.16, 16]} />
+            <mesh position={[-(w * 0.28), h * 0.8 + 0.55, -(d * 0.3)]} material={m.aksen}>
+              <cylinderGeometry args={[0.98, 0.98, 0.16, 16]} />
             </mesh>
             {/* pagar atap */}
             <mesh position={[0, h + 0.55, d / 2 - 0.3]} material={m.pilar}>
@@ -394,18 +394,18 @@ export default function Building({
             <mesh position={[0, h * 0.7 + 2.9, 0]} material={m.mahkota}>
               <sphereGeometry args={[0.17, 12, 12]} />
             </mesh>
-            {/* teras depan beratap kecil */}
-            <group position={[0, 0, d / 2 + 1.1]}>
+            {/* teras depan beratap kecil — dangkal agar tak menyerbu alun-alun */}
+            <group position={[0, 0, d / 2 + 0.45]}>
               <mesh position={[0, 0.13, 0]} receiveShadow={shadows} material={m.badan}>
-                <boxGeometry args={[w * 0.8, 0.26, 1.8]} />
+                <boxGeometry args={[w * 0.8, 0.26, 1.4]} />
               </mesh>
               {[-1, 1].map((s) => (
-                <mesh key={s} position={[s * w * 0.3, h * 0.35, 0.7]} material={m.pilar}>
+                <mesh key={s} position={[s * w * 0.3, h * 0.35, 0.5]} material={m.pilar}>
                   <cylinderGeometry args={[0.08, 0.09, h * 0.7, 8]} />
                 </mesh>
               ))}
               <mesh position={[0, h * 0.7 + 0.4, 0]} rotation={[0, Math.PI / 4, 0]} castShadow={shadows} material={m.atap}>
-                <coneGeometry args={[w * 0.55, 0.8, 4]} />
+                <coneGeometry args={[w * 0.26, 0.8, 4]} />
               </mesh>
             </group>
             {jendela([0, h * 0.38, d / 2 + 0.03], w * 0.7)}
@@ -430,11 +430,11 @@ export default function Building({
             >
               <cylinderGeometry args={[w / 2, w / 2, d * 0.96, 24, 1, false, 0, Math.PI]} />
             </mesh>
-            {/* menara tiketing + jam */}
-            <mesh position={[w / 2 + 0.9, h * 0.75 + 0.36, d / 2 - 0.9]} castShadow={shadows} material={m.badan}>
-              <boxGeometry args={[1.4, h * 1.5, 1.4]} />
+            {/* menara tiketing + jam (rapat dalam tapak) */}
+            <mesh position={[w * 0.36, h * 0.75 + 0.36, d * 0.3]} castShadow={shadows} material={m.badan}>
+              <boxGeometry args={[1.2, h * 1.5, 1.2]} />
             </mesh>
-            <mesh position={[w / 2 + 0.9, h * 1.2 + 0.36, d / 2 - 0.18]} material={m.jam}>
+            <mesh position={[w * 0.36, h * 1.2 + 0.36, d * 0.3 + 0.61]} material={m.jam}>
               <circleGeometry args={[0.42, 20]} />
             </mesh>
             {/* lapangan latihan di depan */}
@@ -511,11 +511,11 @@ export default function Building({
             {jendela([0, 1.24 + h * 0.62, (d * 0.85) / 2 - d * 0.08 + 0.03], w * 0.78)}
             {jendela([(w * 0.9) / 2 + 0.03, 1.24 + h * 0.62, -d * 0.08], d * 0.72, Math.PI / 2, winSamping)}
             {/* kanopi IGD + tiang */}
-            <mesh position={[0, 1.55, d / 2 + 0.95]} castShadow={shadows} material={m.atap}>
-              <boxGeometry args={[w * 0.72, 0.16, 1.8]} />
+            <mesh position={[0, 1.55, d / 2 + 0.6]} castShadow={shadows} material={m.atap}>
+              <boxGeometry args={[w * 0.72, 0.16, 1.5]} />
             </mesh>
             {[-1, 1].map((s) => (
-              <mesh key={s} position={[s * w * 0.3, 0.95, d / 2 + 1.6]} material={m.pilar}>
+              <mesh key={s} position={[s * w * 0.3, 0.95, d / 2 + 1.25]} material={m.pilar}>
                 <cylinderGeometry args={[0.09, 0.1, 1.2, 8]} />
               </mesh>
             ))}
