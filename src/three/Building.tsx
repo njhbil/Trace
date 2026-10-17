@@ -96,7 +96,14 @@ export default function Building({
   const m = useMemo(() => {
     const p = PALET[ragam];
     return {
-      badan: new THREE.MeshStandardMaterial({ color: p.badan, roughness: 0.9, metalness: 0.05 }),
+      badan: new THREE.MeshStandardMaterial({
+        color: p.badan,
+        roughness: 0.9,
+        metalness: 0.05,
+        // wash warna fakultas yang samar — membuat badan gedung tidak kusam
+        emissive: accent,
+        emissiveIntensity: 0.07,
+      }),
       atap: new THREE.MeshStandardMaterial({ color: p.atap, roughness: 0.85, metalness: 0.05 }),
       pilar: new THREE.MeshStandardMaterial({ color: "#C9A227", roughness: 0.45, metalness: 0.65 }),
       putih: new THREE.MeshStandardMaterial({ color: "#D9CDB4", roughness: 0.8 }),
@@ -109,25 +116,25 @@ export default function Building({
         roughness: 0.3,
         metalness: 0.4,
         emissive: new THREE.Color(winHex),
-        emissiveIntensity: 0.5,
+        emissiveIntensity: 0.95,
       }),
       aksen: new THREE.MeshStandardMaterial({
         color: f.warna,
         emissive: accent,
-        emissiveIntensity: 0.55,
+        emissiveIntensity: 1.0,
         roughness: 0.4,
       }),
       mahkota: new THREE.MeshStandardMaterial({
         color: f.warna,
         emissive: accent,
-        emissiveIntensity: 1.4,
+        emissiveIntensity: 1.9,
         roughness: 0.3,
         metalness: 0.7,
       }),
       jam: new THREE.MeshStandardMaterial({
         color: "#F4EBDA",
         emissive: new THREE.Color("#E3BF6D"),
-        emissiveIntensity: 0.5,
+        emissiveIntensity: 0.85,
         roughness: 0.5,
       }),
     };
@@ -146,7 +153,7 @@ export default function Building({
 
   useFrame((_, dt) => {
     // aksen kuningan menyala saat disorot
-    const glowTarget = active ? 1.3 : hover ? 0.95 : 0.5;
+    const glowTarget = active ? 1.8 : hover ? 1.4 : 1.0;
     m.aksen.emissiveIntensity += (glowTarget - m.aksen.emissiveIntensity) * Math.min(1, dt * 6);
 
     // skala saat hover / aktif
