@@ -138,6 +138,48 @@ export function labelTexture(text: string, accent = "#E3BF6D"): THREE.CanvasText
   return tex;
 }
 
+/**
+ * Tekstur deret jendela — satu panel berisi grid jendela menyala/gelap.
+ * Dipakai pada fasad gedung agar terlihat hidup tanpa menambah banyak mesh.
+ */
+export function windowGridTexture(cols: number, rows: number, accent = "#FFD98A"): THREE.CanvasTexture {
+  const cell = 24;
+  const c = document.createElement("canvas");
+  c.width = Math.max(cols * cell, cell);
+  c.height = Math.max(rows * cell, cell);
+  const g = c.getContext("2d")!;
+
+  const rng = mulberry32(cols * 977 + rows * 131);
+  for (let r = 0; r < rows; r++) {
+    for (let col = 0; col < cols; col++) {
+      const x = col * cell + 4;
+      const y = r * cell + 5;
+      const w = cell - 8;
+      const h = cell - 10;
+      const nyala = rng() > 0.45;
+      if (nyala) {
+        // sekeliling jendela sedikit bercahaya (halo tipis)
+        g.globalAlpha = 0.22;
+        g.fillStyle = "#FFF3D0";
+        g.fillRect(x - 2, y - 2, w + 4, h + 4);
+        g.globalAlpha = 0.55 + rng() * 0.45;
+        g.fillStyle = accent;
+        g.fillRect(x, y, w, h);
+      } else {
+        g.globalAlpha = 0.92;
+        g.fillStyle = "rgba(26,20,12,0.95)";
+        g.fillRect(x, y, w, h);
+      }
+    }
+  }
+  g.globalAlpha = 1;
+
+  const tex = new THREE.CanvasTexture(c);
+  tex.colorSpace = THREE.SRGBColorSpace;
+  tex.anisotropy = 4;
+  return tex;
+}
+
 /** PRNG kecil agar penyebaran pohon deterministik (sama pada setiap pemuatan). */
 export function mulberry32(seed: number) {
   let a = seed >>> 0;

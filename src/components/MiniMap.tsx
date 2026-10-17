@@ -1,6 +1,6 @@
-import { FAKULTAS } from "../data/fakultas";
+import { FAKULTAS, ZONA, PULAU_TERHUBUNG } from "../data/fakultas";
 
-const S = 5.5; // skala: dunia (meter) → piksel SVG
+const S = 4.6; // skala: dunia (meter) → piksel SVG
 const C = 200; // pusat kanvas SVG
 
 export const toSvg = (x: number, z: number) => ({ cx: C + x * S, cy: C + z * S });
@@ -26,8 +26,11 @@ export default function MiniMap({ activeSlug, onSelect, showRoute = true, compac
   const line = route.map((f) => toSvg(f.peta.x, f.peta.z));
   const path = line.map((p, i) => `${i === 0 ? "M" : "L"}${p.cx.toFixed(1)},${p.cy.toFixed(1)}`).join(" ");
 
-  const A = toSvg(-10, -1);
-  const B = toSvg(10, 1);
+  const zonaBy = (kode: string) => ZONA.find((z) => z.kode === kode)!;
+  const A = toSvg(zonaBy("ketintang").x, zonaBy("ketintang").z);
+  const B = toSvg(zonaBy("lidah").x, zonaBy("lidah").z);
+  const K3 = toSvg(2, 19.6);
+  const MGT = toSvg(34, 8.6);
 
   return (
     <svg viewBox="0 0 400 400" className={className} role="img" aria-label="Denah rute kampus UNESA">
@@ -45,13 +48,53 @@ export default function MiniMap({ activeSlug, onSelect, showRoute = true, compac
         </filter>
       </defs>
 
-      {/* pulau */}
-      <circle cx={C} cy={C} r={187} fill="url(#mm-island)" stroke="rgba(227,191,109,0.35)" strokeWidth="2" />
-      <circle cx={C} cy={C} r={179} fill="none" stroke="rgba(227,191,109,0.14)" strokeDasharray="2 8" />
+      {/* pulau-pulau kampus */}
+      {ZONA.map((z) => {
+        const p = toSvg(z.x, z.z);
+        return (
+          <g key={z.kode}>
+            <circle
+              cx={p.cx}
+              cy={p.cy}
+              r={z.radius * S}
+              fill="url(#mm-island)"
+              stroke="rgba(227,191,109,0.4)"
+              strokeWidth="2"
+            />
+            <circle
+              cx={p.cx}
+              cy={p.cy}
+              r={(z.radius - 0.9) * S}
+              fill="none"
+              stroke="rgba(227,191,109,0.16)"
+              strokeDasharray="3 7"
+            />
+          </g>
+        );
+      })}
 
-      {/* cincin kluster kampus */}
-      <circle cx={A.cx} cy={A.cy} r={9.2 * S} fill="none" stroke="rgba(227,191,109,0.22)" strokeDasharray="5 7" />
-      <circle cx={B.cx} cy={B.cy} r={9.6 * S} fill="none" stroke="rgba(227,191,109,0.22)" strokeDasharray="5 7" />
+      {/* jembatan penghubung antar pulau */}
+      {PULAU_TERHUBUNG.map(([ka, kb]) => {
+        const za = zonaBy(ka);
+        const zb = zonaBy(kb);
+        const pa = toSvg(za.x, za.z);
+        const pb = toSvg(zb.x, zb.z);
+        const dx = pb.cx - pa.cx;
+        const dy = pb.cy - pa.cy;
+        const len = Math.hypot(dx, dy) || 1;
+        return (
+          <line
+            key={`${ka}-${kb}`}
+            x1={pa.cx + (dx / len) * za.radius * S}
+            y1={pa.cy + (dy / len) * za.radius * S}
+            x2={pb.cx - (dx / len) * zb.radius * S}
+            y2={pb.cy - (dy / len) * zb.radius * S}
+            stroke="#2A241D"
+            strokeWidth={7}
+            strokeLinecap="round"
+          />
+        );
+      })}
 
       {/* pendopo pusat */}
       <g opacity="0.75">
@@ -76,9 +119,9 @@ export default function MiniMap({ activeSlug, onSelect, showRoute = true, compac
         </>
       )}
 
-      {/* penanda arah Magetan */}
-      <text x={396} y={toSvg(27, 10).cy - 24} className="mm-note" textAnchor="end">
-        ← MAGETAN ±120 KM
+      {/* penanda arah Magetan (pojok kanan atas, di luar pulau) */}
+      <text x={396} y={46} className="mm-note" textAnchor="end">
+        MAGETAN ±120 KM ↓
       </text>
 
       {/* titik fakultas */}
@@ -121,6 +164,12 @@ export default function MiniMap({ activeSlug, onSelect, showRoute = true, compac
           </text>
           <text x={B.cx} y={B.cy + 4} textAnchor="middle" className="mm-zone">
             KAMPUS 2
+          </text>
+          <text x={K3.cx} y={K3.cy + 4} textAnchor="middle" className="mm-zone">
+            KAMPUS 3
+          </text>
+          <text x={MGT.cx} y={MGT.cy + 4} textAnchor="middle" className="mm-zone">
+            MAGETAN
           </text>
         </>
       )}

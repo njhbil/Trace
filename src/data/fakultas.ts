@@ -42,15 +42,35 @@ export interface Fakultas {
   /** kalimat yang diucapkan TTS saat halaman dibuka */
   suara: string;
   foto: string;
+  /** ragam bentuk gedung di peta 3D — meniru ciri khas tiap fakultas (ilustratif) */
+  ragamGedung: RagamGedung;
+  /** penyesuaian ukuran gedung di peta 3D (opsional, menimpa bawaan ragam) */
+  dimensiGedung?: { w: number; d: number; h: number };
   peta: { x: number; z: number; rotasi?: number };
   sumber: string[];
 }
 
+/**
+ * Ragam bentuk gedung di peta 3D. Setiap fakultas memakai ragam yang
+ * meniru ciri khas bangunan aslinya (menara, kolonial, bangsal industri,
+ * kubah riset, joglo, gimnasium, blok minimalis, menara medis, gedung kecil).
+ */
+export type RagamGedung =
+  | "menara"
+  | "kolonial"
+  | "industri"
+  | "riset"
+  | "joglo"
+  | "olahraga"
+  | "minimalis"
+  | "medis"
+  | "kecil";
+
 const img = (name: string) => `${import.meta.env.BASE_URL}assets/fakultas/${name}`;
 
 /* ---------- helper penempatan di peta (ilustratif, bukan denah teknis) ---------- */
-const zonaA = { x: -10, z: -1 }; // Kampus 1 Ketintang
-const zonaB = { x: 10, z: 1 }; // Kampus 2 Lidah Wetan
+const zonaA = { x: -15.5, z: -2.5 }; // Kampus 1 Ketintang
+const zonaB = { x: 15.5, z: 2.5 }; // Kampus 2 Lidah Wetan
 
 /** arahkan pintu gedung menghadap pusat pulau */
 function face(p: { x: number; z: number }) {
@@ -73,17 +93,57 @@ function arc(
 
 /** 6 fakultas Kampus Ketintang — busur sisi kiri pulau (1→6) */
 const petaKetintang = (i: number) => arc(zonaA, 9.2, i, 6, 104, 256);
-/** 5 unit Kampus Lidah Wetan — busur sisi kanan (7→11) */
-const petaLidah = (i: number) => arc(zonaB, 9.6, i, 5, -70, 50);
+/** 6 unit Kampus Lidah Wetan — busur sisi kanan (7→11 + Pasca Sarjana) */
+const petaLidah = (i: number) => arc(zonaB, 9.6, i, 6, -78, 58);
 /** titik di luar dua kampus utama */
-const petaMagetan = { x: 27, z: 10, rotasi: face({ x: 27, z: 10 }) };
-const petaKampus3 = { x: 7, z: 19, rotasi: face({ x: 7, z: 19 }) };
-const petaPasca = { x: 20, z: 18, rotasi: face({ x: 20, z: 18 }) };
+const petaMagetan = { x: 36, z: 14, rotasi: face({ x: 36, z: 14 }) };
+const petaKampus3 = { x: 2, z: 23.5, rotasi: face({ x: 2, z: 23.5 }) };
+/** Pasca Sarjana kampusnya di Lidah Wetan — ujung busur yang sama */
+const petaPasca = petaLidah(5);
 
-/** Plakat nama kampus yang dicetak di tanah (lihat src/three/Terrain). */
-export const ZONA = [
-  { kode: "ketintang", label: "KAMPUS 1 · KETINTANG", x: zonaA.x, z: zonaA.z, lebar: 11 },
-  { kode: "lidah", label: "KAMPUS 2 · LIDAH WETAN", x: zonaB.x, z: zonaB.z, lebar: 12 },
+/**
+ * Pulau-pulau kampus di peta 3D (juga dipakai mini denah & plakat tanah).
+ * `radius` = jari-jari pulau, `lebar` = lebar plakat nama (0 = tanpa plakat),
+ * `plakat` = posisi plakat bila tidak di pusat pulau.
+ */
+export interface ZonaPeta {
+  kode: string;
+  label: string;
+  x: number;
+  z: number;
+  radius: number;
+  lebar: number;
+  plakat?: { x: number; z: number };
+}
+
+export const ZONA: ZonaPeta[] = [
+  {
+    kode: "ketintang",
+    label: "KAMPUS 1 · KETINTANG",
+    x: zonaA.x,
+    z: zonaA.z,
+    radius: 13.6,
+    lebar: 11,
+    plakat: { x: zonaA.x, z: zonaA.z - 8 },
+  },
+  {
+    kode: "lidah",
+    label: "KAMPUS 2 · LIDAH WETAN",
+    x: zonaB.x,
+    z: zonaB.z,
+    radius: 13.6,
+    lebar: 12,
+    plakat: { x: zonaB.x, z: zonaB.z - 8 },
+  },
+  { kode: "kampus3", label: "KAMPUS 3 · KEPUTIH", x: 2, z: 23.5, radius: 6.8, lebar: 5.5, plakat: { x: 2, z: 20.4 } },
+  { kode: "magetan", label: "PSDKU · MAGETAN", x: 36, z: 14, radius: 6.4, lebar: 5.5, plakat: { x: 36, z: 10.6 } },
+];
+
+/** pasangan pulau kampus yang dihubungkan jembatan */
+export const PULAU_TERHUBUNG: [string, string][] = [
+  ["ketintang", "lidah"],
+  ["lidah", "kampus3"],
+  ["kampus3", "magetan"],
 ];
 
 export const FAKULTAS: Fakultas[] = [
@@ -145,6 +205,8 @@ export const FAKULTAS: Fakultas[] = [
       "Selamat datang di Fakultas Ilmu Sosial dan Ilmu Politik, atau FISIPOL, Universitas Negeri Surabaya. Fakultas ini lahir tahun seribu sembilan ratus enam puluh empat, dan kini memiliki enam belas program studi. Selamat berkeliling!",
     foto: img("FISIPOL.jpeg"),
     peta: petaKetintang(0),
+    ragamGedung: "menara",
+    dimensiGedung: { w: 5.6, d: 4.6, h: 8.2 },
     sumber: ["https://fisipol.unesa.ac.id/"],
   },
 
@@ -203,6 +265,8 @@ export const FAKULTAS: Fakultas[] = [
       "Selamat datang di Fakultas Ekonomi dan Bisnis, atau FEB, Universitas Negeri Surabaya. Fakultas ini berdiri sendiri sejak tahun dua ribu enam, dan mengelola enam belas program studi. Selamat menjelajah!",
     foto: img("FEB.jpeg"),
     peta: petaKetintang(1),
+    ragamGedung: "kolonial",
+    dimensiGedung: { w: 6.8, d: 4.8, h: 3.8 },
     sumber: ["https://feb.unesa.ac.id/"],
   },
 
@@ -270,6 +334,8 @@ export const FAKULTAS: Fakultas[] = [
       "Selamat datang di Fakultas Vokasi, Universitas Negeri Surabaya. Fakultas ini berdiri sejak tahun dua ribu dua puluh, dan menaungi dua puluh satu program studi terapan. Selamat menyaksikan!",
     foto: img("FV.jpeg"),
     peta: petaKetintang(2),
+    ragamGedung: "industri",
+    dimensiGedung: { w: 7.6, d: 5.2, h: 3.2 },
     sumber: ["https://vokasi.unesa.ac.id/", "https://ft.unesa.ac.id/"],
   },
 
@@ -319,6 +385,8 @@ export const FAKULTAS: Fakultas[] = [
       "Selamat datang di Fakultas Hukum, Universitas Negeri Surabaya. Program studi pertamanya berdiri tahun dua ribu sembilan. Selamat menelusuri ruang peradilan semu kami!",
     foto: img("FH.jpeg"),
     peta: petaKetintang(3),
+    ragamGedung: "kolonial",
+    dimensiGedung: { w: 6.4, d: 4.6, h: 3.6 },
     sumber: ["https://fh.unesa.ac.id/", "https://fh.unesa.ac.id/page/sejarah-jurusan-hukum"],
   },
 
@@ -388,6 +456,8 @@ export const FAKULTAS: Fakultas[] = [
       "Selamat datang di Fakultas Matematika dan Ilmu Pengetahuan Alam, FMIPA, Universitas Negeri Surabaya. Dengan dua puluh tiga program studi, ini adalah fakultas dengan prodi terbanyak di kampus. Selamat berkeliling!",
     foto: img("FMIPA.jpeg"),
     peta: petaKetintang(4),
+    ragamGedung: "riset",
+    dimensiGedung: { w: 5.8, d: 5.0, h: 4.4 },
     sumber: ["https://fmipa.unesa.ac.id/", "https://fmipa.unesa.ac.id/2026/01/selayang-pandang/"],
   },
 
@@ -453,6 +523,8 @@ export const FAKULTAS: Fakultas[] = [
       "Selamat datang di Fakultas Teknik, Universitas Negeri Surabaya. Fakultas ini berdiri bersama kampus sejak tahun seribu sembilan ratus enam puluh empat. Selamat melihat-lihat bengkel dan studio kami!",
     foto: img("FT.PNG"),
     peta: petaKetintang(5),
+    ragamGedung: "industri",
+    dimensiGedung: { w: 7.2, d: 5.0, h: 3.4 },
     sumber: ["https://ft.unesa.ac.id/"],
   },
 
@@ -516,6 +588,8 @@ export const FAKULTAS: Fakultas[] = [
       "Selamat datang di Fakultas Ilmu Pendidikan, Universitas Negeri Surabaya. Fakultas ini berdiri sejak tahun seribu sembilan ratus enam puluh empat dan kini berada di Kampus Lidah Wetan. Selamat berkeliling!",
     foto: img("FIP.jpeg"),
     peta: petaLidah(0),
+    ragamGedung: "joglo",
+    dimensiGedung: { w: 5.4, d: 4.6, h: 3.2 },
     sumber: ["https://fip.unesa.ac.id/"],
   },
 
@@ -587,6 +661,8 @@ export const FAKULTAS: Fakultas[] = [
       "Selamat datang di Fakultas Bahasa dan Seni, FBS, Universitas Negeri Surabaya. Fakultas ini lahir tahun seribu sembilan ratus enam puluh empat dan mengelola dua puluh dua program studi. Selamat menikmati kawasan berseni kami!",
     foto: img("FBS.jpeg"),
     peta: petaLidah(1),
+    ragamGedung: "joglo",
+    dimensiGedung: { w: 5.8, d: 4.8, h: 3.4 },
     sumber: ["https://fbs.unesa.ac.id/", "https://fbs.unesa.ac.id/page/sejarah"],
   },
 
@@ -650,6 +726,8 @@ export const FAKULTAS: Fakultas[] = [
       "Selamat datang di Fakultas Ilmu Keolahragaan dan Kesehatan, FIKK, Universitas Negeri Surabaya. Fakultas ini berawal dari Sekolah Tinggi Olahraga tahun seribu sembilan ratus enam puluh tiga. Selamat menyaksikan latihan kami!",
     foto: img("FIKK.jpeg"),
     peta: petaLidah(2),
+    ragamGedung: "olahraga",
+    dimensiGedung: { w: 7.8, d: 6.4, h: 4.2 },
     sumber: ["https://fikk.unesa.ac.id/page/sejarah", "https://fikk.unesa.ac.id/page/laboratorium"],
   },
 
@@ -699,6 +777,8 @@ export const FAKULTAS: Fakultas[] = [
       "Selamat datang di Fakultas Psikologi, Universitas Negeri Surabaya. Program studinya berdiri tahun dua ribu tujuh, dan kini menempati gedung tujuh lantai yang baru. Selamat menjelajah!",
     foto: img("FPSI.png"),
     peta: petaLidah(3),
+    ragamGedung: "minimalis",
+    dimensiGedung: { w: 5.8, d: 4.4, h: 4.8 },
     sumber: ["https://psikologi.unesa.ac.id/page/sejarah", "https://psikologi.unesa.ac.id/page/struktur-organisasi"],
   },
 
@@ -756,6 +836,8 @@ export const FAKULTAS: Fakultas[] = [
       "Selamat datang di Fakultas Kedokteran, Universitas Negeri Surabaya. Fakultas ini dibuka tahun dua ribu dua puluh tiga dan kini menaungi sembilan program studi. Selamat berkeliling!",
     foto: img("FK.jpeg"),
     peta: petaLidah(4),
+    ragamGedung: "medis",
+    dimensiGedung: { w: 6.0, d: 5.0, h: 6.6 },
     sumber: ["https://fk.unesa.ac.id/", "https://fk.unesa.ac.id/page/akreditasi"],
   },
 
@@ -821,6 +903,8 @@ export const FAKULTAS: Fakultas[] = [
       "Selamat datang di Kampus UNESA Lima Magetan, Program Studi di Luar Kampus Utama Universitas Negeri Surabaya. Kampus ini berdiri di atas lahan hibah seluas tiga belas setengah hektar, dan kini mengelola enam belas program studi. Selamat menjelajah!",
     foto: img("PSDKU.jpg"),
     peta: petaMagetan,
+    ragamGedung: "kecil",
+    dimensiGedung: { w: 4.6, d: 3.8, h: 2.8 },
     sumber: [
       "https://kampusunesamagetan.unesa.ac.id/page/selayang-pandang-unesa-5",
       "https://admisi.unesa.ac.id/page/psdku-magetan",
@@ -877,6 +961,8 @@ export const FAKULTAS: Fakultas[] = [
       "Selamat datang di Fakultas Ketahanan Pangan, Universitas Negeri Surabaya. Fakultas termuda ini baru diresmikan tahun dua ribu dua puluh lima, dan menempati gedung cagar budaya. Selamat berkeliling!",
     foto: img("FKP.jpeg"),
     peta: petaKampus3,
+    ragamGedung: "minimalis",
+    dimensiGedung: { w: 5.4, d: 4.2, h: 4.4 },
     sumber: ["https://fkp.unesa.ac.id/page/history", "https://fkp.unesa.ac.id/page/profil-pimpinan"],
   },
 
@@ -929,6 +1015,8 @@ export const FAKULTAS: Fakultas[] = [
       "Selamat datang di Sekolah Pascasarjana Universitas Negeri Surabaya. Program pascasarjana pertamanya dibuka tahun seribu sembilan ratus delapan puluh satu. Selamat menapaki jenjang studi yang lebih tinggi!",
     foto: img("PASCA SARJANA.jpeg"),
     peta: petaPasca,
+    ragamGedung: "menara",
+    dimensiGedung: { w: 5.0, d: 4.4, h: 7.4 },
     sumber: [
       "https://sekolahpascasarjana.unesa.ac.id/page/profile-pascasarjana-unesa",
       "https://sekolahpascasarjana.unesa.ac.id/",

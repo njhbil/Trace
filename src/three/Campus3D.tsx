@@ -96,24 +96,24 @@ function Scene({
       <ambientLight intensity={0.72} color="#FFE2B8" />
       <hemisphereLight intensity={0.62} color="#8FB2D8" groundColor="#3A2A1A" />
       <directionalLight
-        position={[22, 34, 16]}
+        position={[26, 42, 20]}
         intensity={2.9}
         color="#FFEBCB"
         castShadow
         shadow-mapSize-width={small ? 1024 : 2048}
         shadow-mapSize-height={small ? 1024 : 2048}
-        shadow-camera-left={-40}
-        shadow-camera-right={40}
-        shadow-camera-top={40}
-        shadow-camera-bottom={-40}
-        shadow-camera-far={110}
+        shadow-camera-left={-56}
+        shadow-camera-right={56}
+        shadow-camera-top={56}
+        shadow-camera-bottom={-56}
+        shadow-camera-far={160}
         shadow-bias={-0.0008}
       />
       <directionalLight position={[-26, 16, -20]} intensity={0.75} color="#7FA6D8" />
       <pointLight position={[0, 12, 0]} intensity={260} distance={34} decay={2} color="#E3BF6D" />
 
-      {/* tanah, jalan, pendopo, pohon, rute */}
-      <Terrain avoid={positions} shadows motes={!small} />
+      {/* pulau, jalan, jembatan, pendopo, pohon, rute */}
+      <Terrain avoid={positions} shadows animasi={!small} />
       <RoutePath points={routePoints} visible={showRoute} />
 
       {/* 14 gedung fakultas */}
@@ -140,7 +140,7 @@ function Scene({
         enableDamping
         dampingFactor={0.07}
         minDistance={16}
-        maxDistance={small ? 170 : 96}
+        maxDistance={small ? 190 : 118}
         minPolarAngle={0.18}
         maxPolarAngle={1.3}
         autoRotate={mode === "hero" && !active && !small && !hovered}
