@@ -198,8 +198,8 @@
   overflow-y: auto;
   padding: 20px 22px;
   border-radius: var(--radius-lg);
-  border: 1px solid var(--line);
-  background: linear-gradient(160deg, rgba(58, 48, 36, 0.96), rgba(30, 25, 19, 0.97));
+  border: 1px solid var(--line-soft);
+  background: rgba(32, 26, 20, 0.96);
   backdrop-filter: blur(14px);
   box-shadow: var(--shadow-2);
   scrollbar-width: thin;

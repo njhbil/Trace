@@ -36,7 +36,7 @@ export function numberTexture(label: string, accent = "#E3BF6D"): THREE.CanvasTe
   g.stroke();
 
   g.fillStyle = "#F4EBDA";
-  g.font = "700 96px Fraunces, Georgia, 'Times New Roman', serif";
+  g.font = "700 96px 'DM Sans', system-ui, sans-serif";
   g.textAlign = "center";
   g.textBaseline = "middle";
   g.fillText(label, size / 2, size / 2 + 4);
@@ -102,7 +102,7 @@ export function labelTexture(text: string, accent = "#E3BF6D"): THREE.CanvasText
   const fs = 64;
   const c = document.createElement("canvas");
   const measure = document.createElement("canvas").getContext("2d")!;
-  measure.font = `600 ${fs}px Fraunces, Georgia, serif`;
+  measure.font = `600 ${fs}px 'DM Sans', system-ui, sans-serif`;
   const tw = Math.ceil(measure.measureText(text).width);
   c.width = Math.max(128, tw + pad * 2);
   c.height = fs + pad;
@@ -127,7 +127,7 @@ export function labelTexture(text: string, accent = "#E3BF6D"): THREE.CanvasText
   g.stroke();
 
   g.fillStyle = "#F4EBDA";
-  g.font = `600 ${fs}px Fraunces, Georgia, serif`;
+  g.font = `600 ${fs}px 'DM Sans', system-ui, sans-serif`;
   g.textAlign = "center";
   g.textBaseline = "middle";
   g.fillText(text, c.width / 2, c.height / 2 + 2);

@@ -61,7 +61,7 @@
   display: block;
   height: 100%;
   border-radius: 99px;
-  background: linear-gradient(90deg, var(--gold-600), var(--gold-300));
+  background: var(--gold-500);
   transition: width 0.6s var(--ease-out);
 }
 
@@ -136,7 +136,7 @@
   top: 40px;
   bottom: 40px;
   width: 2px;
-  background: linear-gradient(180deg, var(--gold-600), rgba(201, 162, 39, 0.08));
+  background: var(--line-soft);
   z-index: 0;
 }
 
@@ -162,7 +162,7 @@
   top: 0;
   bottom: 0;
   width: 3px;
-  background: linear-gradient(180deg, var(--c), transparent 85%);
+  background: var(--c);
   opacity: 0.8;
 }
 
@@ -180,27 +180,26 @@
 .stop-check {
   width: 46px;
   height: 46px;
-  border-radius: 50%;
+  border-radius: 14px;
   display: grid;
   place-items: center;
   border: 2px solid var(--line);
   background: var(--ink-850);
   color: var(--cream-70);
   font-family: var(--font-display);
-  font-weight: 700;
+  font-weight: 600;
   font-size: 1rem;
   cursor: pointer;
-  transition: border-color 0.35s var(--ease-out), transform 0.35s var(--ease-out), background 0.35s var(--ease-out),
-    color 0.35s var(--ease-out);
+  transition: border-color 0.35s var(--ease-out), background 0.35s var(--ease-out), color 0.35s var(--ease-out);
 }
 
 .stop-check:hover {
-  border-color: var(--gold-500);
-  transform: scale(1.06);
+  border-color: var(--line);
+  background: var(--ink-700);
 }
 
 .stop.selesai .stop-check {
-  background: linear-gradient(140deg, var(--gold-300), var(--gold-600));
+  background: var(--gold-400);
   border-color: transparent;
   color: var(--ink-900);
 }
