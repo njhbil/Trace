@@ -37,13 +37,13 @@
   --line: rgba(231, 198, 124, 0.24);
   --line-soft: rgba(247, 240, 226, 0.13);
 
-  --font-display: "Fraunces", "Iowan Old Style", Georgia, serif;
-  --font-body: "Plus Jakarta Sans", system-ui, -apple-system, sans-serif;
-  --font-jawa: "Noto Serif Javanese", "Fraunces", serif;
+  --font-display: "DM Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-body: "DM Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-jawa: "Noto Serif Javanese", Georgia, serif;
 
   --shadow-1: 0 2px 10px rgba(0, 0, 0, 0.3);
   --shadow-2: 0 16px 44px -14px rgba(0, 0, 0, 0.62);
-  --shadow-gold: 0 0 0 1px rgba(231, 198, 124, 0.3), 0 18px 45px -18px rgba(208, 169, 58, 0.6);
+  --shadow-gold: 0 0 0 1px rgba(231, 198, 124, 0.28);
 
   --wrap: 1340px;
   --radius: 10px;
@@ -132,7 +132,7 @@ button {
   background: var(--ink-850);
 }
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(var(--gold-700), var(--gold-600));
+  background: var(--ink-500);
   border-radius: 99px;
   border: 2px solid var(--ink-850);
 }
@@ -154,22 +154,22 @@ h4 {
   font-weight: 600;
   line-height: 1.16;
   margin: 0;
-  letter-spacing: -0.012em;
+  letter-spacing: -0.022em;
   color: var(--cream);
 }
 
 .display {
   font-family: var(--font-display);
   font-optical-sizing: auto;
-  font-weight: 600;
-  letter-spacing: -0.03em;
+  font-weight: 700;
+  letter-spacing: -0.04em;
   line-height: 0.98;
   font-size: clamp(2.4rem, 6.4vw, 5.2rem);
 }
 
 .h2 {
   font-size: clamp(1.7rem, 3.4vw, 2.6rem);
-  letter-spacing: -0.02em;
+  letter-spacing: -0.028em;
   line-height: 1.12;
 }
 
@@ -183,26 +183,27 @@ h4 {
   align-items: center;
   gap: 12px;
   font-family: var(--font-body);
-  font-size: 0.84rem;
-  font-weight: 700;
-  letter-spacing: 0.02em;
-  color: var(--gold-300);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--gold-400);
 }
 
 .eyebrow::before {
   content: "";
-  width: 34px;
-  height: 2px;
-  border-radius: 2px;
-  background: linear-gradient(90deg, transparent, var(--gold-500));
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--gold-500);
 }
 
 .eyebrow.center::after {
   content: "";
-  width: 34px;
-  height: 2px;
-  border-radius: 2px;
-  background: linear-gradient(270deg, transparent, var(--gold-500));
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--gold-500);
 }
 
 .lead {
@@ -272,27 +273,34 @@ h4 {
   align-items: center;
   justify-content: center;
   gap: 10px;
-  padding: 14px 26px;
-  border-radius: 999px;
-  border: 1px solid var(--line);
+  padding: 13px 24px;
+  border-radius: 12px;
+  border: 1px solid var(--line-soft);
   background: var(--btn-bg);
   color: var(--cream);
   font-size: 0.95rem;
-  font-weight: 700;
-  overflow: hidden;
-  transition: transform 0.35s var(--ease-out), border-color 0.35s, color 0.35s, background 0.35s;
+  font-weight: 600;
+  transition: background 0.25s var(--ease-out), border-color 0.25s, color 0.25s, opacity 0.25s;
 }
 
 .btn:hover {
-  transform: translateY(-2px);
-  border-color: var(--gold-500);
+  border-color: var(--line);
+  background: rgba(247, 240, 226, 0.06);
+}
+
+.btn:active {
+  opacity: 0.8;
 }
 
 .btn-primary {
-  --btn-bg: linear-gradient(135deg, var(--gold-400), var(--gold-600));
+  --btn-bg: var(--cream);
   color: var(--ink-900);
   border-color: transparent;
-  box-shadow: 0 14px 34px -14px rgba(201, 162, 39, 0.85);
+}
+
+.btn-primary:hover {
+  background: #fff;
+  border-color: transparent;
 }
 
 .btn-ghost {
@@ -301,8 +309,9 @@ h4 {
 }
 
 .btn-sm {
-  padding: 10px 20px;
-  font-size: 0.8rem;
+  padding: 9px 18px;
+  font-size: 0.82rem;
+  border-radius: 10px;
 }
 
 /* ============================ PANEL / CARD ============================ */
@@ -343,7 +352,7 @@ h4 {
   content: "";
   height: 1px;
   flex: 1;
-  background: linear-gradient(90deg, transparent, var(--line), transparent);
+  background: var(--line-soft);
 }
 .orn span {
   font-family: var(--font-jawa);
@@ -366,19 +375,18 @@ h4 {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 6px 12px;
-  border-radius: 6px;
+  padding: 5px 11px;
+  border-radius: 8px;
   border: 1px solid var(--line-soft);
   background: rgba(247, 240, 226, 0.05);
   font-size: 0.76rem;
-  font-weight: 600;
-  letter-spacing: 0.03em;
+  font-weight: 500;
   color: var(--cream-70);
 }
 
 .chip-solid {
-  background: rgba(208, 169, 58, 0.18);
-  border-color: rgba(231, 198, 124, 0.42);
+  background: rgba(208, 169, 58, 0.16);
+  border-color: transparent;
   color: var(--gold-300);
 }
 
@@ -392,14 +400,14 @@ h4 {
   font-family: var(--font-display);
   font-size: clamp(2rem, 4.4vw, 3rem);
   font-weight: 600;
+  letter-spacing: -0.03em;
   line-height: 1;
   color: var(--gold-300);
 }
 
 .stat span {
   font-size: 0.82rem;
-  font-weight: 600;
-  letter-spacing: 0.01em;
+  font-weight: 500;
   color: var(--cream-70);
 }
 
@@ -465,20 +473,21 @@ h4 {
 .nav-links a {
   position: relative;
   padding: 9px 15px;
-  border-radius: 999px;
+  border-radius: 10px;
   font-size: 0.88rem;
-  font-weight: 600;
+  font-weight: 500;
   color: var(--cream-70);
   transition: color 0.3s, background 0.3s;
 }
 
 .nav-links a:hover {
-  color: var(--gold-300);
+  color: var(--cream);
+  background: rgba(247, 240, 226, 0.06);
 }
 
 .nav-links a.active {
-  color: var(--ink-900);
-  background: linear-gradient(135deg, var(--gold-400), var(--gold-600));
+  color: var(--cream);
+  background: rgba(247, 240, 226, 0.1);
 }
 
 .nav-tools {
@@ -492,22 +501,22 @@ h4 {
   height: 42px;
   display: grid;
   place-items: center;
-  border-radius: 50%;
-  border: 1px solid var(--line);
+  border-radius: 12px;
+  border: 1px solid var(--line-soft);
   background: rgba(244, 235, 218, 0.05);
   color: var(--cream-70);
-  transition: all 0.35s var(--ease-out);
+  transition: background 0.3s var(--ease-out), color 0.3s, border-color 0.3s;
 }
 
 .icon-btn:hover {
-  border-color: var(--gold-500);
-  color: var(--gold-300);
-  transform: translateY(-2px);
+  border-color: var(--line);
+  color: var(--cream);
+  background: rgba(247, 240, 226, 0.08);
 }
 
 .icon-btn.on {
-  background: rgba(201, 162, 39, 0.18);
-  border-color: var(--gold-500);
+  background: rgba(201, 162, 39, 0.16);
+  border-color: rgba(231, 198, 124, 0.4);
   color: var(--gold-300);
 }
 
@@ -625,7 +634,6 @@ h4 {
   border-radius: 50%;
   border: 2px solid transparent;
   border-top-color: var(--gold-400);
-  border-right-color: var(--gold-600);
   animation: spin 1.15s linear infinite;
 }
 
@@ -647,7 +655,7 @@ h4 {
 .pre-bar i {
   display: block;
   height: 100%;
-  background: linear-gradient(90deg, var(--gold-600), var(--gold-300));
+  background: var(--gold-500);
   transition: width 0.3s ease;
 }
 
@@ -724,7 +732,7 @@ h4 {
   inset: 0;
   z-index: 950;
   pointer-events: none;
-  background: linear-gradient(140deg, var(--ink-900), #241a11);
+  background: var(--ink-900);
 }
 
 .sr-only {

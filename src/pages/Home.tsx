@@ -63,8 +63,8 @@ export default function Home() {
           <div className="hero-copy">
             <motion.h1
               className="display hero-title"
-              initial={{ opacity: 0, y: 40, letterSpacing: "0.14em" }}
-              animate={{ opacity: 1, y: 0, letterSpacing: "-0.01em" }}
+              initial={{ opacity: 0, y: 40 }}
+              animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4, duration: 1.1, ease: [0.16, 1, 0.3, 1] }}
             >
               TRACE
@@ -116,7 +116,8 @@ export default function Home() {
             animate={{ opacity: 1 }}
             transition={{ delay: 1.6, duration: 1 }}
           >
-            <span className="hint-dot" /> Geser ke samping untuk memutar kampus — lalu ketuk nomornya untuk masuk
+            <span className="hint-dot" /> Gulir untuk turun · geser mendatar untuk memutar kampus · ketuk penanda
+            bernomor untuk masuk
           </motion.div>
         </div>
 
@@ -327,7 +328,7 @@ export default function Home() {
             {[
               {
                 t: "Buka peta",
-                d: "Putar kampus dengan digeser, perbesar dengan dua jari, lalu pilih penanda bernomor sesuai urutan rute.",
+                d: "Putar kampus dengan digeser mendatar. Untuk zoom penuh dan kontrol kamera lengkap, buka halaman Peta.",
               },
               {
                 t: "Pilih titik",

@@ -57,16 +57,16 @@
 .hero-title {
   font-size: clamp(3rem, 11vw, 7.2rem);
   line-height: 0.94;
-  letter-spacing: -0.035em;
+  letter-spacing: -0.05em;
   text-shadow: 0 18px 60px rgba(0, 0, 0, 0.6);
 }
 
 .hero-sub {
   margin: 12px 0 0;
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: clamp(0.95rem, 1.8vw, 1.2rem);
   font-weight: 500;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.02em;
   color: var(--gold-300);
 }
 
@@ -92,13 +92,10 @@
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  padding: 9px 18px;
-  border-radius: 999px;
-  border: 1px solid var(--line);
-  background: rgba(25, 20, 16, 0.72);
-  backdrop-filter: blur(8px);
+  padding: 0;
   font-size: 0.82rem;
-  color: var(--cream-70);
+  color: var(--cream-50);
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.8);
 }
 
 .hint-dot {
@@ -124,13 +121,13 @@
   display: block;
   width: 1px;
   height: 46px;
-  background: linear-gradient(180deg, transparent, var(--gold-500));
+  background: var(--cream-30);
   animation: pulse 2.2s ease-in-out infinite;
 }
 
 .hero-scroll span {
   font-size: 0.62rem;
-  letter-spacing: 0.36em;
+  letter-spacing: 0.22em;
   color: var(--cream-30);
   writing-mode: vertical-rl;
 }
@@ -185,7 +182,8 @@
 .tl-tahun {
   font-family: var(--font-display);
   font-size: clamp(1.5rem, 3vw, 2.1rem);
-  font-weight: 700;
+  font-weight: 600;
+  letter-spacing: -0.02em;
   color: var(--gold-400);
   line-height: 1;
 }
@@ -247,7 +245,8 @@
 .pilar-no {
   font-family: var(--font-display);
   font-size: 0.76rem;
-  letter-spacing: 0.3em;
+  font-weight: 600;
+  letter-spacing: 0.12em;
   color: var(--gold-500);
   position: relative;
   z-index: 1;
@@ -296,13 +295,12 @@
   align-items: center;
   gap: 8px;
   padding: 7px 13px 7px 7px;
-  border-radius: 6px;
+  border-radius: 10px;
   border: 1px solid var(--line-soft);
   background: rgba(247, 240, 226, 0.04);
   color: var(--cream-70);
   font-size: 0.74rem;
-  font-weight: 600;
-  letter-spacing: 0.06em;
+  font-weight: 500;
   transition: border-color 0.3s var(--ease-out), background 0.3s var(--ease-out), color 0.3s var(--ease-out);
 }
 
@@ -311,11 +309,12 @@
   height: 22px;
   display: grid;
   place-items: center;
-  border-radius: 4px;
+  border-radius: 6px;
   background: var(--c);
   color: #191410;
   font-family: var(--font-display);
   font-size: 0.74rem;
+  font-weight: 600;
 }
 
 .rq-item:hover {
@@ -397,7 +396,8 @@
   display: inline-block;
   font-family: var(--font-display);
   font-size: 2.4rem;
-  font-weight: 700;
+  font-weight: 600;
+  letter-spacing: -0.03em;
   color: rgba(227, 191, 109, 0.35);
   line-height: 1;
   margin-bottom: 12px;
