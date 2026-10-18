@@ -315,8 +315,14 @@
   .rute-map {
     grid-template-columns: 1fr;
   }
-  .rute-progress-card {
+
+  /* global.css memuat .panel { position: relative } setelah berkas ini,
+     sehingga position: static biasa kalah urut dan top: 96px ikut terpakai —
+     kartu progres terdorong ke bawah menindih kartu peta. Spesifisitas
+     dinaikkan agar kartu benar-benar statis di layar sempit. */
+  .rute-page .rute-progress-card {
     position: static;
+    top: auto;
   }
 }
 
