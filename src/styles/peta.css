@@ -355,7 +355,9 @@
     gap: 8px;
     overflow-x: auto;
     overflow-y: hidden;
-    padding: 10px;
+    /* sisa ruang di kanan untuk tombol suara (audio-dock) agar pil terakhir
+       tidak tertutup tombol ketika daftar digeser sampai ujung */
+    padding: 10px 58px 10px 10px;
     align-items: center;
   }
 
@@ -368,6 +370,10 @@
     margin-top: 0;
     flex-direction: row;
     gap: 6px;
+    /* jangan menyusut: kalau menyusut, pil antar kampus saling menumpuk
+       (mis. FT ketutup FIP) karena isinya melebar melewati kotak grupnya */
+    flex: none;
+    min-width: max-content;
   }
 
   .rail-group-name {
